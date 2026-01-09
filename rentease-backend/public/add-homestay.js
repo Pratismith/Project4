@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Dynamic API base URL
-  const API_BASE = window.location.hostname.includes("localhost")
-    ? "http://localhost:4000"
-    : window.location.origin; // e.g. https://mynest-sr8f.onrender.com
+  const API_BASE = window.location.origin; // e.g. https://mynest-sr8f.onrender.com
 
   const form = document.getElementById("homestayForm");
   const token = localStorage.getItem("token");

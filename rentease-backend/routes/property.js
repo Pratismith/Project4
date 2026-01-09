@@ -5,6 +5,8 @@ import Property from "../models/Property.js";
 import upload from "../middleware/upload.js";
 import { v2 as cloudinary } from "cloudinary";
 
+import { uploadToCloudinaryArray } from "../middleware/upload.js";
+
 const router = express.Router();
 
 // Get all properties
@@ -34,7 +36,7 @@ router.get("/my-properties", authMiddleware, async (req, res) => {
 });
 
 // Add new property
-router.post("/add-property", authMiddleware, upload.array("images", 5), async (req, res) => {
+router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
   try {
     const {
       title, type, location, price, deposit, description,
@@ -102,7 +104,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update property
-router.put("/:id", authMiddleware, upload.array("images", 5), async (req, res) => {
+router.post("/:id", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
   try {
     const { id } = req.params;
     const property = await Property.findOne({ _id: id, userId: req.user.id });
@@ -144,6 +146,7 @@ router.put("/:id", authMiddleware, upload.array("images", 5), async (req, res) =
       furnishing: req.body.furnishing,
       phone: req.body.phone,
       amenities: amenitiesArray,
+      verified: true
     };
 
     let finalImages = [];
@@ -159,7 +162,7 @@ router.put("/:id", authMiddleware, upload.array("images", 5), async (req, res) =
       finalImages = [...finalImages, ...req.files.map(file => file.path)];
     }
 
-    const removedImages = property.images.filter(img => !finalImages.includes(img));
+    const removedImages = property.images.filter(img => img && !finalImages.includes(img));
     for (const url of removedImages) {
       try {
         const publicId = url.split("/").pop().split(".")[0];
@@ -169,7 +172,7 @@ router.put("/:id", authMiddleware, upload.array("images", 5), async (req, res) =
       }
     }
 
-    updateData.images = finalImages;
+    updateData.images = finalImages.filter(img => img !== null);
 
     const updated = await Property.findOneAndUpdate(
       { _id: id, userId: req.user.id },

@@ -15,9 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // const API_BASE = window.location.hostname.includes("localhost")
     //   ? "http://localhost:4000"
     //   : "https://mynest-sr8f.onrender.com"; 
-      const API_BASE = window.location.hostname.includes("localhost")
-    ? "http://localhost:4000"
-    : window.location.origin; 
+    const API_BASE = window.location.origin; 
 
     // Collect form data
     const formData = new FormData(form);

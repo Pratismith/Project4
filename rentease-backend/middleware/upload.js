@@ -20,20 +20,25 @@ import cloudinary from "../config/cloudinary.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-export const uploadToCloudinary = (fieldName = "image", folder = "rentease_properties") => {
+export const uploadToCloudinaryArray = (fieldName = "images", folder = "rentease_properties") => {
   return [
-    upload.single(fieldName),
+    upload.array(fieldName, 5),
     async (req, res, next) => {
-      if (!req.file) return next();
+      if (!req.files || req.files.length === 0) return next();
       try {
-        const result = await new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream(
-            { folder, resource_type: "image", allowed_formats: ["jpg", "jpeg", "png"] },
-            (error, result) => (error ? reject(error) : resolve(result))
-          );
-          streamifier.createReadStream(req.file.buffer).pipe(stream);
+        const uploadPromises = req.files.map((file) => {
+          return new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+              { folder, resource_type: "image", allowed_formats: ["jpg", "jpeg", "png"] },
+              (error, result) => (error ? reject(error) : resolve(result))
+            );
+            streamifier.createReadStream(file.buffer).pipe(stream);
+          });
         });
-        req.file.cloudinary = result;
+        const results = await Promise.all(uploadPromises);
+        req.files.forEach((file, index) => {
+          file.path = results[index].secure_url;
+        });
         next();
       } catch (err) {
         next(err);
