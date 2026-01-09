@@ -35,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const formData = new FormData(form);
 
-    const amenities = Array.from(document.querySelectorAll("input[name='amenities']:checked"))
+    const amenitiesArray = Array.from(document.querySelectorAll("input[name='amenities']:checked"))
       .map(cb => cb.value);
     formData.delete("amenities");
-    if (amenities.length > 0) formData.append("amenities", amenities.join(","));
+    amenitiesArray.forEach(a => formData.append("amenities", a));
 
     // Default gender
     formData.set("gender", "Any");

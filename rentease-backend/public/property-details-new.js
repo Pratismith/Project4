@@ -12,9 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Determine backend URL dynamically
-  const API_BASE = window.location.hostname.includes("localhost")
-    ? "http://localhost:4000"
-    : window.location.origin;  // 🔗 replace with your Render backend URL
+  const API_BASE = window.location.origin;  // 🔗 replace with your Render backend URL
 
   try {
     // Fetch from backend
@@ -28,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const property = data.property; // backend returns { property: {...} }
 
     if (property) {
+      console.log("Images:", property.images);
       // Image Gallery (Scrollable)
       const gallery = document.getElementById("image-gallery");
       gallery.innerHTML = "";
@@ -88,5 +87,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelector(".top-row").innerHTML = `<p>Error loading property details.</p>`;
   }
 });
-
-console.log("Images:", property.images);

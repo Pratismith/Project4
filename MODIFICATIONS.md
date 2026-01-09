@@ -10,7 +10,8 @@
 - **Null Values**: Added filtering to remove `null` values from the `images` array during property updates.
 - **Update Method**: Changed update route from `PUT` to `POST` for compatibility with some frontend environments if needed, and updated the route logic to handle existing and new images more robustly.
 
-## 3. Environment & Workflow Setup
-- **Port Configuration**: Set backend server to listen on port 5000 and bind to `0.0.0.0` for Replit proxy support.
-- **Workflow**: Configured "Start application" workflow to run the backend server.
-- **Secrets**: Ensured `JWT_SECRET` and `MONGO_URI` are utilized from Replit Secrets.
+## 4. Frontend Bug Fixes (Jan 10, 2026)
+- **Add Homestay**: Fixed a bug in `add-homestay.js` where amenities were being appended as a comma-separated string instead of multiple individual field values, which was causing issues with the backend's `upload.array` and `amenities` processing.
+- **Property Details**: Fixed a `ReferenceError` in `property-details-new.js` where `property.images` was being logged outside of the scope where `property` was defined.
+- **Dynamic API Base**: Standardized `API_BASE` to `window.location.origin` across all frontend JS files for consistent behavior in the Replit environment.
+
