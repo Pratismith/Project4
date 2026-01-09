@@ -45,10 +45,18 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
 
     console.log("📥 Raw data from frontend:", { price, type });
 
+    if (!price) {
+      return res.status(400).json({ message: "Price is required" });
+    }
+
     // ✅ Extract only numbers from price (remove everything except digits)
     const priceNumber = price.toString().replace(/\D/g, '');
     console.log("🔢 Extracted price number:", priceNumber);
     
+    if (!priceNumber) {
+      return res.status(400).json({ message: "Invalid price format" });
+    }
+
     let formattedPrice = '';
     if (type === "Homestay" || type === "1BHK" || type === "2BHK" || type === "3BHK" || type === "Bungalow") {
       formattedPrice = `₹${parseInt(priceNumber).toLocaleString('en-IN')}/day`;
@@ -72,11 +80,11 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       price: formattedPrice,
       deposit: deposit ? `₹${parseInt(deposit.toString().replace(/\D/g, '')).toLocaleString('en-IN')}` : "",
       description,
-      beds, 
-      baths, 
-      sqFt, 
-      gender, 
-      furnishing, 
+      beds: beds || 0, 
+      baths: baths || 0, 
+      sqFt: sqFt || "0", 
+      gender: gender || "Any", 
+      furnishing: furnishing || "Unfurnished", 
       phone,
       amenities: amenitiesArray,
       images: imageUrls,

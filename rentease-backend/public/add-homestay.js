@@ -45,13 +45,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // ✅ Use dynamic backend URL
+      console.log("Submitting to:", `${API_BASE}/api/properties/add-property`);
       const res = await fetch(`${API_BASE}/api/properties/add-property`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      console.log("Raw response:", text);
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error("Server returned non-JSON response");
+      }
       if (res.ok) {
         alert("✅ Homestay added successfully!");
         sessionStorage.removeItem("rentease_properties_cache");
