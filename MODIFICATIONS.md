@@ -22,8 +22,8 @@
 - **Server Binding**: Configured `server.js` to bind to `0.0.0.0:5000`, a requirement for Replit's web proxy.
 - **Workflow**: Updated the "Start application" workflow to correctly initialize from the backend directory.
 
-## 7. Submission Restoration & Image Fix (Jan 20, 2026)
-- **Restored Route Logic**: Reverted to a simpler, more standard Express middleware pattern in `rentease-backend/routes/property.js` to ensure the property listing functionality is fully restored.
-- **Fixed Memory Uploads**: Corrected the `uploadToCloudinaryArray` middleware to properly handle Multer's memory storage. The issue was that the `images` field in the database was being populated with `null` values because the `path` property was not being correctly assigned to the files after Cloudinary upload.
-- **Detailed Upload Logs**: Added logging to track every step of the Cloudinary upload process (Multer receipt -> Buffer streaming -> Cloudinary response -> Path assignment).
-- **Backend Validation**: Ensured numeric parsing and default values are handled robustly to prevent "Server Error" during database saves.
+## 8. Final Image Upload & Error Handling Fix (Jan 20, 2026)
+- **Global Error Handler**: Added a global JSON error handler in `server.js` to ensure the frontend always receives a valid JSON response even if an unhandled error occurs. This prevents the "Server error. Try again later" alert from hiding the real cause.
+- **Middleware Streamlining**: Simplified the integration of `uploadToCloudinaryArray` in routes to use it as standard Express middleware.
+- **Validation Improvements**: Added checks for required fields (Title, Price, Location) and provided safer defaults for optional fields during the database save process.
+- **WhatsApp Integration**: Automatically populates the `whatsapp` field with the phone number if not explicitly provided.

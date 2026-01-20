@@ -40,35 +40,24 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
   try {
     const {
       title, type, location, price, deposit, description,
-      beds, baths, sqFt, gender, furnishing, phone, amenities
+      beds, baths, sqFt, gender, furnishing, phone, amenities,
+      availability, maxGuests, whatsapp
     } = req.body;
 
-    console.log("📥 Raw data from frontend:", { price, type, body: req.body });
-    console.log("🖼️ Files received:", req.files?.length);
+    console.log("📥 Final Data Save:", { title, type, files: req.files?.length });
 
-    if (!price) {
-      return res.status(400).json({ message: "Price is required" });
+    if (!title || !price || !location) {
+      return res.status(400).json({ message: "Required fields missing (Title, Price, Location)" });
     }
 
-    // ✅ Extract only numbers from price (remove everything except digits)
     const priceNumber = price.toString().replace(/\D/g, '');
-    console.log("🔢 Extracted price number:", priceNumber);
-    
-    if (!priceNumber) {
-      return res.status(400).json({ message: "Invalid price format" });
-    }
+    let formattedPrice = (type === "Homestay" || type === "1BHK" || type === "2BHK" || type === "3BHK" || type === "Bungalow")
+      ? `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`
+      : `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
 
-    let formattedPrice = '';
-    if (type === "Homestay" || type === "1BHK" || type === "2BHK" || type === "3BHK" || type === "Bungalow") {
-      formattedPrice = `₹${parseInt(priceNumber).toLocaleString('en-IN')}/day`;
-    } else {
-      formattedPrice = `₹${parseInt(priceNumber).toLocaleString('en-IN')}/month`;
-    }
-
-    console.log("🎯 Final formatted price:", formattedPrice);
-
-    const imageUrls = req.files?.map(file => file.path).filter(path => path) || [];
-    console.log("🖼️ Final image URLs to save:", imageUrls);
+    // CRITICAL: Ensure we use the 'path' property we set in the middleware
+    const imageUrls = (req.files || []).map(f => f.path).filter(p => p);
+    console.log("🖼️ Saving URLs:", imageUrls);
 
     let amenitiesArray = [];
     if (amenities) {
@@ -76,28 +65,32 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
     }
 
     const property = new Property({
-      title, 
-      type, 
-      location, 
+      title,
+      type,
+      location,
       price: formattedPrice,
       deposit: deposit ? `₹${parseInt(deposit.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
       description,
-      beds: parseInt(beds) || 0, 
-      baths: parseInt(baths) || 0, 
-      sqFt: sqFt || "0", 
-      gender: gender || "Any", 
-      furnishing: furnishing || "Unfurnished", 
+      beds: parseInt(beds) || 0,
+      baths: parseInt(baths) || 0,
+      sqFt: sqFt || "0",
+      gender: gender || "Any",
+      furnishing: furnishing || "Unfurnished",
       phone,
+      whatsapp: whatsapp || phone,
       amenities: amenitiesArray,
       images: imageUrls,
       userId: req.user.id,
+      availability: availability || "Available",
+      maxGuests: parseInt(maxGuests) || 0,
+      verified: false
     });
 
     await property.save();
-    res.json({ message: "Property added successfully", property });
+    res.status(201).json({ message: "Property added successfully", property });
   } catch (err) {
-    console.error("❌ Error adding property:", err);
-    res.status(500).json({ message: "Server error", error: err.message });
+    console.error("❌ Database/Save Error:", err);
+    res.status(500).json({ message: "Failed to save property to database", error: err.message });
   }
 });
 

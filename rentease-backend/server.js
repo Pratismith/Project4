@@ -37,6 +37,15 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api", authRoutes);
 app.use("/api/properties", propertyRoutes);
 
+// ✅ Global Error Handler (MUST BE AFTER ROUTES)
+app.use((err, req, res, next) => {
+  console.error("💥 Global Error Handler:", err);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err.stack : undefined
+  });
+});
+
 // ✅ Catch-all route for frontend (non-API requests)
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {

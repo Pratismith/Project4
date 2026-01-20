@@ -57,41 +57,27 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!formData.has("gender")) formData.set("gender", "Any");
 
     try {
-      // ✅ Use dynamic backend URL
+      const API_BASE = window.location.origin;
       console.log("Submitting to:", `${API_BASE}/api/properties/add-property`);
       
-      // LOG THE DATA BEING SENT
-      for (let pair of formData.entries()) {
-        console.log("Sending field:", pair[0], pair[1] instanceof File ? `File: ${pair[1].name}` : pair[1]);
-      }
-
       const res = await fetch(`${API_BASE}/api/properties/add-property`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      const text = await res.text();
-      console.log("Raw response status:", res.status);
-      console.log("Raw response text:", text);
-      
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
-      }
+      const data = await res.json();
+      console.log("Response:", data);
 
       if (res.ok) {
         alert("✅ Homestay added successfully!");
-        sessionStorage.removeItem("rentease_properties_cache");
         window.location.href = "my-properties.html";
       } else {
-        alert(`❌ Failed: ${data.message || "Error adding homestay"}`);
+        alert(`❌ Error: ${data.message}\n${data.error || ""}`);
       }
     } catch (err) {
-      console.error("Full Error Object:", err);
-      alert(`⚠️ Server error: ${err.message}`);
+      console.error("Fetch error:", err);
+      alert(`⚠️ Connection Error: ${err.message}`);
     }
   });
 
