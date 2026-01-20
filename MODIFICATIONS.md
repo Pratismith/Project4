@@ -21,3 +21,8 @@
 ## 4. Environment Configuration
 - **Server Binding**: Configured `server.js` to bind to `0.0.0.0:5000`, a requirement for Replit's web proxy.
 - **Workflow**: Updated the "Start application" workflow to correctly initialize from the backend directory.
+
+## 5. Homestay Submission Error Fix (Jan 20, 2026)
+- **Middleware Update**: Refactored `uploadToCloudinaryArray` in `rentease-backend/middleware/upload.js` to handle its own multer initialization inside the middleware function. This prevents "Multer Error: Unexpected field" and "Server Error" issues when different forms use different field names or structures.
+- **Route Error Handling**: Added detailed error logging and manual execution of the upload middleware in `rentease-backend/routes/property.js` to catch and report specific upload failures.
+- **Data Validation**: Added `parseInt` for numeric fields (beds, baths) in the property creation logic to ensure they are stored as numbers in MongoDB.

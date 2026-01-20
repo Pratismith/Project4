@@ -36,14 +36,22 @@ router.get("/my-properties", authMiddleware, async (req, res) => {
 });
 
 // Add new property
-router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
+router.post("/add-property", authMiddleware, (req, res, next) => {
+  uploadToCloudinaryArray("images")(req, res, (err) => {
+    if (err) {
+      console.error("❌ Multer/Cloudinary Error:", err);
+      return res.status(500).json({ message: "Upload failed", error: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     const {
       title, type, location, price, deposit, description,
       beds, baths, sqFt, gender, furnishing, phone, amenities
     } = req.body;
 
-    console.log("📥 Raw data from frontend:", { price, type });
+    console.log("📥 Raw data from frontend:", { price, type, body: req.body });
 
     if (!price) {
       return res.status(400).json({ message: "Price is required" });
@@ -81,8 +89,8 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       price: formattedPrice,
       deposit: deposit ? `₹${parseInt(deposit.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
       description,
-      beds: beds || 0, 
-      baths: baths || 0, 
+      beds: parseInt(beds) || 0, 
+      baths: parseInt(baths) || 0, 
       sqFt: sqFt || "0", 
       gender: gender || "Any", 
       furnishing: furnishing || "Unfurnished", 
