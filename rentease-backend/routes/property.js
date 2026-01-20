@@ -36,8 +36,9 @@ router.get("/my-properties", authMiddleware, async (req, res) => {
 });
 
 // Add new property
-router.post("/add-property", authMiddleware, (req, res, next) => {
-  uploadToCloudinaryArray("images")(req, res, (err) => {
+router.post("/add-property", authMiddleware, async (req, res, next) => {
+  const multerHandler = uploadToCloudinaryArray("images");
+  multerHandler(req, res, (err) => {
     if (err) {
       console.error("❌ Multer/Cloudinary Error:", err);
       return res.status(500).json({ message: "Upload failed", error: err.message });

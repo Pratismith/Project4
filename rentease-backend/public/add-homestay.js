@@ -59,6 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // ✅ Use dynamic backend URL
       console.log("Submitting to:", `${API_BASE}/api/properties/add-property`);
+      
+      // LOG THE DATA BEING SENT
+      for (let pair of formData.entries()) {
+        console.log("Sending field:", pair[0], pair[1] instanceof File ? `File: ${pair[1].name}` : pair[1]);
+      }
+
       const res = await fetch(`${API_BASE}/api/properties/add-property`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -66,13 +72,16 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const text = await res.text();
-      console.log("Raw response:", text);
+      console.log("Raw response status:", res.status);
+      console.log("Raw response text:", text);
+      
       let data;
       try {
         data = JSON.parse(text);
       } catch (e) {
-        throw new Error("Server returned non-JSON response");
+        throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
       }
+
       if (res.ok) {
         alert("✅ Homestay added successfully!");
         sessionStorage.removeItem("rentease_properties_cache");
@@ -81,8 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`❌ Failed: ${data.message || "Error adding homestay"}`);
       }
     } catch (err) {
-      console.error("Error adding homestay:", err);
-      alert("⚠️ Server error. Please try again.");
+      console.error("Full Error Object:", err);
+      alert(`⚠️ Server error: ${err.message}`);
     }
   });
 
