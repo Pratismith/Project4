@@ -39,10 +39,11 @@ app.use("/api/properties", propertyRoutes);
 
 // ✅ Global Error Handler (MUST BE AFTER ROUTES)
 app.use((err, req, res, next) => {
-  console.error("💥 Global Error Handler:", err);
-  res.status(err.status || 500).json({
-    message: err.message || "Internal Server Error",
-    error: process.env.NODE_ENV === "development" ? err.stack : undefined
+  console.error("💥 CRITICAL ERROR:", err);
+  res.status(500).json({
+    message: "A critical server error occurred.",
+    error: err.message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined
   });
 });
 
@@ -53,12 +54,6 @@ app.get("*", (req, res) => {
   } else {
     res.status(404).json({ message: "API route not found" });
   }
-});
-
-// ✅ Global Error Handler
-app.use((err, req, res, next) => {
-  console.error("💥 Server Error:", err.stack);
-  res.status(500).json({ message: "Server Error" });
 });
 
 // ✅ Connect to DB and start server

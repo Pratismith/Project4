@@ -37,6 +37,7 @@ router.get("/my-properties", authMiddleware, async (req, res) => {
 
 // Add new property
 router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
+  console.log("DEBUG [Route Entry]: Request arrived at add-property");
   try {
     const {
       title, type, location, price, deposit, description,
@@ -44,10 +45,11 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       availability, maxGuests, whatsapp
     } = req.body;
 
-    console.log("📥 Final Data Save:", { title, type, files: req.files?.length });
+    console.log("DEBUG [Body Parsing]:", { title, type, location });
 
     if (!title || !price || !location) {
-      return res.status(400).json({ message: "Required fields missing (Title, Price, Location)" });
+      console.log("DEBUG [Validation Fail]: Missing required fields");
+      return res.status(400).json({ message: "Missing required fields: Title, Price, and Location are mandatory." });
     }
 
     const priceNumber = price.toString().replace(/\D/g, '');
@@ -55,9 +57,8 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       ? `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`
       : `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
 
-    // CRITICAL: Ensure we use the 'path' property we set in the middleware
     const imageUrls = (req.files || []).map(f => f.path).filter(p => p);
-    console.log("🖼️ Saving URLs:", imageUrls);
+    console.log("DEBUG [Images to Save]:", imageUrls);
 
     let amenitiesArray = [];
     if (amenities) {
@@ -86,11 +87,13 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       verified: false
     });
 
+    console.log("DEBUG [DB Save Start]: Saving to MongoDB...");
     await property.save();
+    console.log("DEBUG [DB Save Success]: Property created with ID:", property._id);
     res.status(201).json({ message: "Property added successfully", property });
   } catch (err) {
-    console.error("❌ Database/Save Error:", err);
-    res.status(500).json({ message: "Failed to save property to database", error: err.message });
+    console.error("DEBUG [Final Catch Route]:", err);
+    res.status(500).json({ message: "Server error occurred while saving property.", error: err.message });
   }
 });
 
