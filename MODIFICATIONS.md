@@ -22,7 +22,8 @@
 - **Server Binding**: Configured `server.js` to bind to `0.0.0.0:5000`, a requirement for Replit's web proxy.
 - **Workflow**: Updated the "Start application" workflow to correctly initialize from the backend directory.
 
-## 6. Submission Debugging & Stability (Jan 20, 2026)
-- **Enhanced Backend Logging**: Added detailed logs in `rentease-backend/routes/property.js` to inspect the `req.body` and `req.files` immediately after Multer processing. This helps track if data is lost during multipart parsing.
-- **Frontend Data Sanitization**: Updated `add-homestay.js` to skip appending inputs with `null` or `undefined` values, ensuring a cleaner payload.
-- **Improved Multer Integration**: Refined how `uploadToCloudinaryArray` is invoked in the property route to better handle the asynchronous flow between Multer and the route handler.
+## 7. Submission Restoration & Image Fix (Jan 20, 2026)
+- **Restored Route Logic**: Reverted to a simpler, more standard Express middleware pattern in `rentease-backend/routes/property.js` to ensure the property listing functionality is fully restored.
+- **Fixed Memory Uploads**: Corrected the `uploadToCloudinaryArray` middleware to properly handle Multer's memory storage. The issue was that the `images` field in the database was being populated with `null` values because the `path` property was not being correctly assigned to the files after Cloudinary upload.
+- **Detailed Upload Logs**: Added logging to track every step of the Cloudinary upload process (Multer receipt -> Buffer streaming -> Cloudinary response -> Path assignment).
+- **Backend Validation**: Ensured numeric parsing and default values are handled robustly to prevent "Server Error" during database saves.

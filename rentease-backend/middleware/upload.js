@@ -25,11 +25,18 @@ export const uploadToCloudinaryArray = (fieldName = "images", folder = "rentease
   
   return async (req, res, next) => {
     multerMiddleware(req, res, async (err) => {
-      if (err) return next(err);
+      if (err) {
+        console.error("Multer Error:", err);
+        return res.status(400).json({ message: "File upload failed", error: err.message });
+      }
       
-      if (!req.files || req.files.length === 0) return next();
+      if (!req.files || req.files.length === 0) {
+        console.log("No files to upload");
+        return next();
+      }
       
       try {
+        console.log(`Starting Cloudinary upload for ${req.files.length} files...`);
         const uploadPromises = req.files.map((file) => {
           return new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
@@ -49,7 +56,8 @@ export const uploadToCloudinaryArray = (fieldName = "images", folder = "rentease
         
         next();
       } catch (err) {
-        next(err);
+        console.error("Cloudinary Upload Error:", err);
+        return res.status(500).json({ message: "Image upload failed", error: err.message });
       }
     });
   };

@@ -36,18 +36,7 @@ router.get("/my-properties", authMiddleware, async (req, res) => {
 });
 
 // Add new property
-router.post("/add-property", authMiddleware, async (req, res, next) => {
-  const multerHandler = uploadToCloudinaryArray("images");
-  multerHandler(req, res, (err) => {
-    if (err) {
-      console.error("❌ Multer/Cloudinary Error:", err);
-      return res.status(500).json({ message: "Upload failed", error: err.message });
-    }
-    console.log("📥 Raw body after multer:", req.body);
-    console.log("🖼️ Files after multer:", req.files?.length);
-    next();
-  });
-}, async (req, res) => {
+router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
   try {
     const {
       title, type, location, price, deposit, description,
@@ -55,6 +44,7 @@ router.post("/add-property", authMiddleware, async (req, res, next) => {
     } = req.body;
 
     console.log("📥 Raw data from frontend:", { price, type, body: req.body });
+    console.log("🖼️ Files received:", req.files?.length);
 
     if (!price) {
       return res.status(400).json({ message: "Price is required" });
