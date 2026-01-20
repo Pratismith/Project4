@@ -33,15 +33,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // 3️⃣ Handle form submit
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const formData = new FormData(form);
-
-    const amenitiesArray = Array.from(document.querySelectorAll("input[name='amenities']:checked"))
-      .map(cb => cb.value);
-    formData.delete("amenities");
-    amenitiesArray.forEach(a => formData.append("amenities", a));
+    const formData = new FormData();
+    
+    // Manual append to ensure no nulls/undefined
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.type === 'file') {
+        if (input.files.length > 0) {
+          for (let i = 0; i < input.files.length; i++) {
+            formData.append('images', input.files[i]);
+          }
+        }
+      } else if (input.type === 'checkbox') {
+        if (input.checked) {
+          formData.append('amenities', input.value);
+        }
+      } else if (input.name) {
+        formData.append(input.name, input.value);
+      }
+    });
 
     // Default gender
-    formData.set("gender", "Any");
+    if (!formData.has("gender")) formData.set("gender", "Any");
 
     try {
       // ✅ Use dynamic backend URL

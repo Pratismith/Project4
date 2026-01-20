@@ -66,7 +66,8 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
 
     console.log("🎯 Final formatted price:", formattedPrice);
 
-    const imageUrls = req.files?.map(file => file.path) || [];
+    const imageUrls = req.files?.map(file => file.path).filter(path => path) || [];
+    console.log("🖼️ Final image URLs to save:", imageUrls);
 
     let amenitiesArray = [];
     if (amenities) {

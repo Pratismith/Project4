@@ -11,22 +11,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Determine backend URL (local or live)
-    // const API_BASE = window.location.hostname.includes("localhost")
-    //   ? "http://localhost:4000"
-    //   : "https://mynest-sr8f.onrender.com"; 
     const API_BASE = window.location.origin; 
 
-    // Collect form data
-    const formData = new FormData(form);
-
-    // ✅ Handle amenities properly (as an array)
-    const amenities = Array.from(
-      document.querySelectorAll("input[name='amenities']:checked")
-    ).map((cb) => cb.value);
-
-    formData.delete("amenities");
-    amenities.forEach((a) => formData.append("amenities[]", a));
+    const formData = new FormData();
+    const inputs = form.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      if (input.type === 'file') {
+        if (input.files.length > 0) {
+          for (let i = 0; i < input.files.length; i++) {
+            formData.append('images', input.files[i]);
+          }
+        }
+      } else if (input.type === 'checkbox') {
+        if (input.checked) {
+          formData.append('amenities', input.value);
+        }
+      } else if (input.name) {
+        formData.append(input.name, input.value);
+      }
+    });
 
     try {
       const response = await fetch(`${API_BASE}/api/properties/add-property`, {

@@ -36,6 +36,7 @@ export const uploadToCloudinaryArray = (fieldName = "images", folder = "rentease
           });
         });
         const results = await Promise.all(uploadPromises);
+        console.log("☁️ Cloudinary results:", results.map(r => r.secure_url));
         req.files.forEach((file, index) => {
           file.path = results[index].secure_url;
         });
