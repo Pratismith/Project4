@@ -22,7 +22,7 @@
 - **Server Binding**: Configured `server.js` to bind to `0.0.0.0:5000`, a requirement for Replit's web proxy.
 - **Workflow**: Updated the "Start application" workflow to correctly initialize from the backend directory.
 
-## 5. Homestay Submission Error Fix (Jan 20, 2026)
-- **Middleware Update**: Refactored `uploadToCloudinaryArray` in `rentease-backend/middleware/upload.js` to handle its own multer initialization inside the middleware function. This prevents "Multer Error: Unexpected field" and "Server Error" issues when different forms use different field names or structures.
-- **Route Error Handling**: Added detailed error logging and manual execution of the upload middleware in `rentease-backend/routes/property.js` to catch and report specific upload failures.
-- **Data Validation**: Added `parseInt` for numeric fields (beds, baths) in the property creation logic to ensure they are stored as numbers in MongoDB.
+## 6. Submission Debugging & Stability (Jan 20, 2026)
+- **Enhanced Backend Logging**: Added detailed logs in `rentease-backend/routes/property.js` to inspect the `req.body` and `req.files` immediately after Multer processing. This helps track if data is lost during multipart parsing.
+- **Frontend Data Sanitization**: Updated `add-homestay.js` to skip appending inputs with `null` or `undefined` values, ensuring a cleaner payload.
+- **Improved Multer Integration**: Refined how `uploadToCloudinaryArray` is invoked in the property route to better handle the asynchronous flow between Multer and the route handler.

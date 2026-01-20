@@ -43,6 +43,8 @@ router.post("/add-property", authMiddleware, async (req, res, next) => {
       console.error("❌ Multer/Cloudinary Error:", err);
       return res.status(500).json({ message: "Upload failed", error: err.message });
     }
+    console.log("📥 Raw body after multer:", req.body);
+    console.log("🖼️ Files after multer:", req.files?.length);
     next();
   });
 }, async (req, res) => {

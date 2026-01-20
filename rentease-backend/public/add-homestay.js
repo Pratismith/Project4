@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (input.checked) {
           formData.append('amenities', input.value);
         }
-      } else if (input.name) {
+      } else if (input.name && input.value !== undefined && input.value !== null) {
         formData.append(input.name, input.value);
       }
     });
