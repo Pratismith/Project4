@@ -322,13 +322,14 @@ nav ul li a.active {
 
 /* Featured Promotion Styles */
 .featured-promotion {
-  margin-top: 25px;
+  margin: 20px 0;
   width: 100%;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.15);
+  background: #fff;
   border-radius: 12px;
   padding: 15px 0;
   position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .promo-track {
