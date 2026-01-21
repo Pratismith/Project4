@@ -27,13 +27,17 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd rentease-backend && npm start"
-waitForPort = 5000
+waitForPort = 4000
 
-[workflows.workflow.metadata]
-outputType = "webview"
+[[ports]]
+localPort = 4000
+externalPort = 3000
 
 [[ports]]
 localPort = 5000

@@ -23,7 +23,7 @@ rentease-backend/
 ```
 
 ## Running the Application
-The app runs on port 5000 with the command:
+The app runs on port 5000 with the command (Replit requirement):
 ```bash
 cd rentease-backend && npm start
 ```
