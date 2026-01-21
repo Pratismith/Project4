@@ -110,75 +110,56 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update property
-router.post("/:id", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
+router.put("/:id", authMiddleware, uploadToCloudinaryArray("images"), async (req, res) => {
   try {
     const { id } = req.params;
     const property = await Property.findOne({ _id: id, userId: req.user.id });
     if (!property) return res.status(404).json({ message: "Property not found or not owned by user" });
 
-    console.log("📥 Raw data from frontend for update:", { price: req.body.price, type: req.body.type });
+    const {
+      title, type, location, price, deposit, description,
+      beds, baths, sqFt, gender, furnishing, phone, whatsapp, maxGuests
+    } = req.body;
 
-    // ✅ Extract only numbers from price (remove everything except digits)
-    const priceNumber = req.body.price.toString().replace(/\D/g, '');
-    console.log("🔢 Extracted price number for update:", priceNumber);
-    
-    let formattedPrice = '';
-    if (req.body.type === "Homestay" || req.body.type === "1BHK" || req.body.type === "2BHK" || req.body.type === "3BHK" || req.body.type === "Bungalow") {
-      formattedPrice = `₹${parseInt(priceNumber).toLocaleString('en-IN')}/day`;
-    } else {
-      formattedPrice = `₹${parseInt(priceNumber).toLocaleString('en-IN')}/month`;
-    }
-
-    console.log("🎯 Final formatted price for update:", formattedPrice);
-
-    let amenitiesArray = [];
-    if (req.body.amenities) {
-      amenitiesArray = Array.isArray(req.body.amenities)
-        ? req.body.amenities
-        : req.body.amenities.split(",").map(a => a.trim());
-    }
+    const priceNumber = price.toString().replace(/\D/g, '');
+    let formattedPrice = (type === "Homestay" || type === "1BHK" || type === "2BHK" || type === "3BHK" || type === "Bungalow")
+      ? `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`
+      : `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
 
     const updateData = {
-      title: req.body.title,
-      type: req.body.type,
-      location: req.body.location,
+      title, type, location,
       price: formattedPrice,
-      deposit: req.body.deposit ? `₹${parseInt(req.body.deposit.toString().replace(/\D/g, '')).toLocaleString('en-IN')}` : "",
-      description: req.body.description,
-      beds: req.body.beds,
-      baths: req.body.baths,
-      sqFt: req.body.sqFt,
-      gender: req.body.gender,
-      furnishing: req.body.furnishing,
-      phone: req.body.phone,
-      amenities: amenitiesArray,
+      deposit: deposit ? `₹${parseInt(deposit.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      description,
+      beds: parseInt(beds) || 0,
+      baths: parseInt(baths) || 0,
+      sqFt: sqFt || "0",
+      gender: gender || "Any",
+      furnishing: furnishing || "Unfurnished",
+      phone,
+      whatsapp: whatsapp || phone,
+      maxGuests: parseInt(maxGuests) || 0,
       verified: true
     };
+
+    if (req.body.amenities) {
+      updateData.amenities = Array.isArray(req.body.amenities) ? req.body.amenities : req.body.amenities.split(",").map(a => a.trim());
+    }
 
     let finalImages = [];
     if (req.body.existingImages) {
       try {
-        const parsed = JSON.parse(req.body.existingImages);
-        if (Array.isArray(parsed)) finalImages = parsed;
+        finalImages = JSON.parse(req.body.existingImages);
       } catch (e) {
         console.error("Failed to parse existingImages:", e.message);
       }
     }
+
     if (req.files?.length) {
       finalImages = [...finalImages, ...req.files.map(file => file.path)];
     }
 
-    const removedImages = property.images.filter(img => img && !finalImages.includes(img));
-    for (const url of removedImages) {
-      try {
-        const publicId = url.split("/").pop().split(".")[0];
-        await cloudinary.uploader.destroy(publicId);
-      } catch (err) {
-        console.error("Cloudinary delete error:", err.message);
-      }
-    }
-
-    updateData.images = finalImages.filter(img => img !== null);
+    updateData.images = finalImages.filter(img => img);
 
     const updated = await Property.findOneAndUpdate(
       { _id: id, userId: req.user.id },

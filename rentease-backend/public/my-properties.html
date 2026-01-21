@@ -403,11 +403,12 @@
           class="w-full border p-2 rounded" required />
 
         <!-- FIXED: Updated property type dropdown -->
-        <select name="type" class="w-full border p-2 rounded" required>
+        <select name="type" class="w-full border p-2 rounded" required onchange="const isH = ['Homestay', '1BHK', '2BHK', '3BHK', 'Bungalow'].includes(this.value); document.querySelectorAll('.homestay-only').forEach(f => f.style.display = isH ? 'block' : 'none'); document.querySelectorAll('.property-only').forEach(f => f.style.display = isH ? 'none' : 'block'); document.querySelector('.price-label').textContent = isH ? 'Price per Night (₹)' : 'Monthly Rent (₹)';">
           <option value="">Select Type</option>
           <option value="PG">PG</option>
           <option value="Flat">Flat</option>
           <option value="Apartment">Rent House</option>
+          <option value="Homestay">Homestay</option>
           <option value="1BHK">1BHK Homestay</option>
           <option value="2BHK">2BHK Homestay</option>
           <option value="3BHK">3BHK Homestay</option>
@@ -418,8 +419,14 @@
           class="w-full border p-2 rounded" required />
 
         <div class="grid grid-cols-2 gap-4">
-          <input type="number" name="price" placeholder="Price (₹)" class="border p-2 rounded" required />
-          <input type="number" name="deposit" placeholder="Deposit (₹)" class="border p-2 rounded" />
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 mb-1 price-label">Price (₹)</label>
+            <input type="number" name="price" placeholder="Price (₹)" class="w-full border p-2 rounded" required />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 mb-1">Deposit (₹)</label>
+            <input type="number" name="deposit" placeholder="Deposit (₹)" class="w-full border p-2 rounded" />
+          </div>
         </div>
 
         <textarea name="description" placeholder="Description"
@@ -432,22 +439,32 @@
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <select name="gender" class="border p-2 rounded">
-            <option value="Any">Any</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Family">Family</option>
-          </select>
-          <select name="furnishing" class="border p-2 rounded">
-            <option value="">Select Furnishing</option>
-            <option value="Furnished">Furnished</option>
-            <option value="Semi-Furnished">Semi-Furnished</option>
-            <option value="Unfurnished">Unfurnished</option>
-          </select>
+          <div class="property-only">
+            <select name="gender" class="w-full border p-2 rounded">
+              <option value="Any">Any Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Family">Family</option>
+            </select>
+          </div>
+          <div class="property-only">
+            <select name="furnishing" class="w-full border p-2 rounded">
+              <option value="">Select Furnishing</option>
+              <option value="Furnished">Furnished</option>
+              <option value="Semi-Furnished">Semi-Furnished</option>
+              <option value="Unfurnished">Unfurnished</option>
+            </select>
+          </div>
+          <div class="homestay-only" style="display:none;">
+            <input type="number" name="maxGuests" placeholder="Max Guests" class="w-full border p-2 rounded" />
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <input type="text" name="phone" placeholder="Phone" class="border p-2 rounded" />
+          <div class="homestay-only" style="display:none;">
+            <input type="text" name="whatsapp" placeholder="WhatsApp Number" class="w-full border p-2 rounded" />
+          </div>
         </div>
 
         <div>

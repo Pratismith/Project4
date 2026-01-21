@@ -128,18 +128,44 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           // Prefill form fields
           editForm.dataset.id = id;
+          editForm.dataset.type = p.type; // Store type for form logic
           editForm.title.value = p.title;
-          editForm.type.value = p.type || "";
+          
+          const typeSelect = editForm.querySelector('select[name="type"]');
+          if (typeSelect) typeSelect.value = p.type || "";
+          
           editForm.location.value = p.location;
-          editForm.price.value = p.price;
-          editForm.deposit.value = p.deposit || "";
+          
+          // Strip currency symbols for number input
+          const priceValue = p.price ? p.price.replace(/[^\d]/g, "") : "";
+          const depositValue = p.deposit ? p.deposit.replace(/[^\d]/g, "") : "";
+          
+          editForm.price.value = priceValue;
+          editForm.deposit.value = depositValue;
+          
           editForm.description.value = p.description || "";
           editForm.beds.value = p.beds || 0;
           editForm.baths.value = p.baths || 0;
           editForm.sqFt.value = p.sqFt || "";
-          editForm.gender.value = p.gender || "Any";
-          editForm.furnishing.value = p.furnishing || "";
-          editForm.phone.value = p.phone || "";
+          
+          if (editForm.gender) editForm.gender.value = p.gender || "Any";
+          if (editForm.furnishing) editForm.furnishing.value = p.furnishing || "";
+          if (editForm.phone) editForm.phone.value = p.phone || "";
+          if (editForm.whatsapp) editForm.whatsapp.value = p.whatsapp || p.phone || "";
+          if (editForm.maxGuests) editForm.maxGuests.value = p.maxGuests || 1;
+
+          // Toggle visibility based on type
+          const isHomestay = ["Homestay", "1BHK", "2BHK", "3BHK", "Bungalow"].includes(p.type);
+          const homestayFields = editForm.querySelectorAll(".homestay-only");
+          const propertyFields = editForm.querySelectorAll(".property-only");
+          
+          homestayFields.forEach(f => f.style.display = isHomestay ? "block" : "none");
+          propertyFields.forEach(f => f.style.display = isHomestay ? "none" : "block");
+
+          // Update Price Label
+          const priceLabel = editForm.querySelector(".price-label");
+          if (priceLabel) priceLabel.textContent = isHomestay ? "Price per Night (₹)" : "Monthly Rent (₹)";
+
 
           // ✅ Load amenities
           const amenityCheckboxes = editForm.querySelectorAll('input[name="amenities"]');
