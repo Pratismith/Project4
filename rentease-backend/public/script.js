@@ -185,16 +185,50 @@ async function fetchProperties() {
     if (data.properties) {
       allProperties = data.properties;
       renderProperties(allProperties);
+      renderFeaturedPromotion(allProperties);
       initializeFilters();
     } else {
       renderProperties([]);
+      renderFeaturedPromotion([]);
       initializeFilters();
     }
   } catch (err) {
     console.error("Error fetching properties:", err);
     renderProperties([]);
+    renderFeaturedPromotion([]);
     initializeFilters();
   }
+}
+
+function renderFeaturedPromotion(properties) {
+  const track = document.getElementById("promo-track");
+  if (!track) return;
+
+  // Filter for featured properties (verified ones or just the first few)
+  const featured = properties.filter(p => p.verified).slice(0, 10);
+  if (featured.length === 0) {
+    // Fallback if no verified properties
+    featured.push(...properties.slice(0, 5));
+  }
+
+  if (featured.length === 0) {
+    document.querySelector(".featured-promotion").style.display = "none";
+    return;
+  }
+
+  // Double the array for seamless infinite loop
+  const displayItems = [...featured, ...featured];
+
+  track.innerHTML = displayItems.map(p => `
+    <div class="promo-item" onclick="window.location.href='property-details.html'; localStorage.setItem('selectedPropertyId', '${p._id}')">
+      <img src="${p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/300x200'}" class="promo-img">
+      <div class="promo-info">
+        <h4>${p.title}</h4>
+        <p>📍 ${p.location}</p>
+        <div class="promo-badge">Featured</div>
+      </div>
+    </div>
+  `).join("");
 }
 
 const countHeading = document.getElementById("properties-count");
