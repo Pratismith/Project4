@@ -143,14 +143,30 @@
           <button type="button" class="filter-option" data-type="villa">HOMESTAY</button>
         </div>
 
-      </section>
+        <!-- Popup Modal for Advanced Search -->
+        <div id="searchModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="search-modal-title">
+          <div class="modal-content" role="document">
+            <button class="close" aria-label="Close search dialog">&times;</button>
+            <h2 id="search-modal-title">Search Properties</h2>
 
-      <!-- Featured Promotion Area -->
-      <div class="featured-promotion">
-        <div class="promo-track" id="promo-track">
-          <!-- Promo items will be inserted by JS -->
+            <form id="searchForm">
+              <label for="searchInput">City, Area, or Property Name</label>
+              <input type="text" id="searchInput" placeholder="City, Area, or Property Name" required>
+
+              <label for="propertyType">Property Type</label>
+              <select id="propertyType">
+                <option value="any">Any</option>
+                <option value="pg">PG's</option>
+                <option value="apartment">Rental Apartment</option>
+                <option value="flat">Flat</option>
+                <option value="villa">Homestay's</option>
+              </select>
+
+              <button type="submit" class="btn-gradient">Search</button>
+            </form>
+          </div>
         </div>
-      </div>
+      </section>
 
       <!-- Properties -->
       <section class="properties">
