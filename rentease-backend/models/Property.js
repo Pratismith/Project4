@@ -25,7 +25,8 @@ const propertySchema = new mongoose.Schema(
 
     // Contact info
     phone: { type: String },
-    //whatsapp: { type: String },
+    whatsapp: { type: String },
+    gmapLink: { type: String },
 
     // Media and features
     amenities: [{ type: String }],

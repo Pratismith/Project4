@@ -55,6 +55,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       // PG Name and Other Details Box
       document.getElementById("property-title").textContent = property.title;
       document.getElementById("property-location").textContent = property.location;
+      
+      // Google Maps Location
+      const locationItem = document.querySelector(".location-info");
+      if (property.gmapLink && locationItem) {
+        const gmapBtn = document.createElement("a");
+        gmapBtn.href = property.gmapLink;
+        gmapBtn.target = "_blank";
+        gmapBtn.className = "status-badge available";
+        gmapBtn.style.textDecoration = "none";
+        gmapBtn.style.marginTop = "10px";
+        gmapBtn.style.display = "inline-flex";
+        gmapBtn.style.alignItems = "center";
+        gmapBtn.style.gap = "5px";
+        gmapBtn.innerHTML = `📍 View on Google Maps`;
+        locationItem.appendChild(gmapBtn);
+      }
+
       document.getElementById("bedrooms").textContent = property.beds || "-";
       document.getElementById("bathrooms").textContent = property.baths || "-";
       document.getElementById("area").textContent = property.sqFt || "-";

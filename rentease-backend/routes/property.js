@@ -42,10 +42,10 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
     const {
       title, type, location, price, deposit, description,
       beds, baths, sqFt, gender, furnishing, phone, amenities,
-      availability, maxGuests, whatsapp
+      availability, maxGuests, whatsapp, gmapLink
     } = req.body;
 
-    console.log("DEBUG [Body Parsing]:", { title, type, location });
+    console.log("DEBUG [Body Parsing]:", { title, type, location, gmapLink });
 
     if (!title || !price || !location) {
       console.log("DEBUG [Validation Fail]: Missing required fields");
@@ -79,6 +79,7 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       furnishing: furnishing || "Unfurnished",
       phone,
       whatsapp: whatsapp || phone,
+      gmapLink,
       amenities: amenitiesArray,
       images: imageUrls,
       userId: req.user.id,
