@@ -839,9 +839,9 @@
             dynamicDetails.style.display = 'block';
             dynamicPricing.style.display = 'block';
             descriptionTitle.style.display = 'none'; 
-            commonPricing.style.display = 'block'; // Ensure common pricing stays visible
-            // Keep common price required as a fallback or base
-            document.getElementById('price').setAttribute('required', '');
+            commonPricing.style.display = 'none';
+            // Remove required attribute when hidden
+            document.getElementById('price').removeAttribute('required');
             renderDetailSections(selected);
             renderPricingSections(selected);
           } else {
@@ -851,6 +851,7 @@
             dynamicPricing.style.display = 'none';
             descriptionTitle.style.display = 'flex';
             commonPricing.style.display = 'block';
+            // Add required attribute back when visible
             document.getElementById('price').setAttribute('required', '');
             sectionsContainer.innerHTML = '';
             pricingContainer.innerHTML = '';
