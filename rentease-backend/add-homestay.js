@@ -56,15 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // homestay_type is handled separately later
       } 
       // All other named inputs with values
-      else if (input.name && input.value !== undefined && input.value !== null && input.value.toString().trim() !== "") {
-        // Check if it's a dynamic field (e.g., price_1BHK)
+      else if (input.name && input.value !== undefined && input.value !== null && input.value.trim() !== "") {
+        // Check if it's a dynamic field (e.g., beds_1BHK or price_1BHK)
         const dynamicMatch = input.name.match(/^(beds|baths|kitchen|sqFt|maxGuests|price|deposit)_(.+)$/);
         if (dynamicMatch) {
           const [_, field, type] = dynamicMatch;
-          const cleanType = type.trim();
-          if (!propertyDetails[cleanType]) propertyDetails[cleanType] = {};
-          propertyDetails[cleanType][field] = input.value;
-          console.log(`DEBUG [Field Capture]: Capturing dynamic field ${field} for type ${cleanType} with value ${input.value}`);
+          if (!propertyDetails[type]) propertyDetails[type] = {};
+          propertyDetails[type][field] = input.value;
+          console.log(`DEBUG [Field Capture]: Capturing dynamic field ${field} for type ${type} with value ${input.value}`);
         } else {
           formData.append(input.name, input.value);
           console.log(`DEBUG [Field Capture]: Capturing static field ${input.name} with value ${input.value}`);
@@ -73,30 +72,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Reconstruct selected types from checkboxes
-    const selectedTypes = Array.from(form.querySelectorAll('input[name="homestay_type"]:checked')).map(cb => cb.value.trim());
+    const selectedTypes = Array.from(form.querySelectorAll('input[name="homestay_type"]:checked')).map(cb => cb.value);
     formData.set("type", selectedTypes.join(", "));
-    console.log("DEBUG [Field Capture]: Selected types (trimmed):", selectedTypes);
+    console.log("DEBUG [Field Capture]: Selected types:", selectedTypes);
     
-    // Set base price from common pricing section
-    const commonPrice = document.getElementById("price")?.value;
-    if (commonPrice) {
-      formData.set("price", commonPrice);
-      const commonDeposit = document.getElementById("deposit")?.value;
-      if (commonDeposit) formData.set("deposit", commonDeposit);
-    }
+    // Add nested details as a stringified JSON
+    formData.append("details", JSON.stringify(propertyDetails));
 
-    // Capture dynamic room-specific details
+    // CRITICAL: Ensure 'price' is set at the top level for backend validation
+    let foundPrice = null;
     if (selectedTypes.length > 0) {
-      for (const cleanType of selectedTypes) {
-        if (propertyDetails[cleanType]) {
-          // If room-specific price is provided, it will be stored in the 'details' JSON
-          console.log(`DEBUG [Price Setup]: Found details for room type ${cleanType}`);
+      for (const type of selectedTypes) {
+        if (propertyDetails[type] && propertyDetails[type].price) {
+          foundPrice = propertyDetails[type].price;
+          formData.set("price", foundPrice);
+          formData.set("deposit", propertyDetails[type].deposit || "0");
+          formData.set("beds", propertyDetails[type].beds || "0");
+          formData.set("baths", propertyDetails[type].baths || "0");
+          formData.set("sqFt", propertyDetails[type].sqFt || "0");
+          formData.set("maxGuests", propertyDetails[type].maxGuests || "0");
+          console.log(`DEBUG [Price Setup]: Found price ${foundPrice} in room type ${type}`);
+          break;
         }
       }
     }
     
-    // Add nested details as a stringified JSON
-    formData.set("details", JSON.stringify(propertyDetails));
+    // Fallback if no room type price found
+    if (!foundPrice) {
+      const commonPrice = document.getElementById("price")?.value;
+      if (commonPrice) {
+        formData.set("price", commonPrice);
+        const commonDeposit = document.getElementById("deposit")?.value;
+        if (commonDeposit) formData.set("deposit", commonDeposit);
+        console.log("DEBUG [Price Setup]: Using common price:", commonPrice);
+      }
+    }
 
     console.log("DEBUG [Final FormData]: Sending Title:", formData.get("title"), "Location:", formData.get("location"), "Price:", formData.get("price"));
 
