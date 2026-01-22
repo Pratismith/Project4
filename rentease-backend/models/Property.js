@@ -1,9 +1,11 @@
+// rentease-backend/models/Property.js
 import mongoose from "mongoose";
 
 const propertySchema = new mongoose.Schema(
   {
     type: { 
       type: String, 
+      enum: ["1BHK", "2BHK", "3BHK", "Flat", "Rent House", "PG", "1RK", "Villa", "Homestay", "Other"], 
       required: true 
     }, // NEW field for category
 
@@ -33,7 +35,6 @@ const propertySchema = new mongoose.Schema(
     // Metadata
     verified: { type: Boolean, default: false },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    details: { type: Object, default: {} },
   },
   { timestamps: true }
 );

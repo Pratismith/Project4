@@ -523,46 +523,39 @@
 
                 <div class="form-group">
                   <label for="type" class="required">Property Type</label>
-                  <div class="custom-multiselect" style="position: relative; max-width: 400px;">
-                    <div id="type-display" style="width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #fff; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
-                      <span id="selected-types-text" style="color: #6b7280;">Select Type</span>
-                      <i class="fas fa-chevron-down" style="font-size: 12px; color: #94a3b8;"></i>
-                    </div>
-                    <div id="type-dropdown" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; width: 100%; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; z-index: 50; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); padding: 6px;">
-                      <label style="display: flex; align-items: center; padding: 8px 12px; cursor: pointer; border-radius: 6px; transition: background 0.2s; margin-bottom: 2px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'"><input type="checkbox" name="homestay_type" value="1BHK" style="width: 16px; height: 16px; margin-right: 10px; accent-color: #2563eb;"> <span style="font-size: 14px; color: #374151;">1BHK</span></label>
-                      <label style="display: flex; align-items: center; padding: 8px 12px; cursor: pointer; border-radius: 6px; transition: background 0.2s; margin-bottom: 2px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'"><input type="checkbox" name="homestay_type" value="2BHK" style="width: 16px; height: 16px; margin-right: 10px; accent-color: #2563eb;"> <span style="font-size: 14px; color: #374151;">2BHK</span></label>
-                      <label style="display: flex; align-items: center; padding: 8px 12px; cursor: pointer; border-radius: 6px; transition: background 0.2s; margin-bottom: 2px;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'"><input type="checkbox" name="homestay_type" value="3BHK" style="width: 16px; height: 16px; margin-right: 10px; accent-color: #2563eb;"> <span style="font-size: 14px; color: #374151;">3BHK</span></label>
-                    </div>
-                  </div>
-                  <p class="help-text">Select one or more types. If your property doesn't match any of these, please mention it in the Description field above.</p>
+                  <select id="type" name="type" required>
+                    <option value="Homestay">Homestay</option>
+                    <option value="1BHK">1BHK</option>
+                    <option value="2BHK">2BHK</option>
+                    <option value="3BHK">3BHK</option>
+                    <option value="Bungalow">Bungalow</option>
+                    <!--<option value="Flat">Flat</option>-->
+                  </select>
+                  <p class="help-text">If your property doesn't match any of these, please mention it in the Description field above.</p>
                 </div>
               </div>
             </div>
 
-            <!-- Dynamic Pricing Details -->
-            <div id="dynamic-pricing" class="form-section" style="display: none;">
+            <!-- Pricing -->
+            <div class="form-section">
               <h3 class="section-title">
                 <i class="fas fa-tag"></i>
-                Pricing Details
+                Pricing
               </h3>
-              <div id="pricing-container"></div>
-            </div>
-
-            <div id="common-pricing" class="form-section">
-              <h3 class="section-title">
-                <i class="fas fa-tag"></i>
-                Common Pricing
-              </h3>
+              
               <div class="form-row">
                 <div class="form-group">
-                  <label for="price" class="required">Base Price per Night (₹)</label>
+                  <label for="price" class="required">Price per Night (₹)</label>
                   <input
                     type="number"
                     id="price"
                     name="price"
-                    placeholder="General price"
+                    placeholder=""
                     required
                   />
+                  <p class="help-text">
+                    Set competitive pricing for your homestay
+                  </p>
                 </div>
 
                 <div class="form-group">
@@ -571,27 +564,60 @@
                     type="number"
                     id="deposit"
                     name="deposit"
-                    placeholder="Common deposit"
+                    placeholder=""
                   />
                 </div>
               </div>
             </div>
 
-            <!-- Dynamic Property Details -->
-            <div id="dynamic-property-details" class="form-section" style="display: none;">
+            <!-- Property Details -->
+            <div class="form-section">
               <h3 class="section-title">
                 <i class="fas fa-home"></i>
                 Property Details
               </h3>
-              <div id="sections-container"></div>
-            </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="beds" class="required">Bedrooms</label>
+                  <input
+                    type="number"
+                    id="beds"
+                    name="beds"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="baths" class="required">Bathrooms</label>
+                  <input
+                    type="number"
+                    id="baths"
+                    name="baths"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="sqFt">Area (sq ft)</label>
+                  <input type="text" id="sqFt" name="sqFt" placeholder="" />
+                </div>
+              </div>
 
-            <!-- Common Details (Description) -->
-            <div id="common-details" class="form-section">
-              <h3 class="section-title" id="description-section-title">
-                <i class="fas fa-file-alt"></i>
-                Description
-              </h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="maxGuests" class="required">Maximum Guests</label>
+                  <input
+                    type="number"
+                    id="maxGuests"
+                    name="maxGuests"
+                    placeholder=""
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- Description -->
               <div class="form-group">
                 <label for="description" class="required">Description</label>
                 <textarea
@@ -796,178 +822,6 @@
           userBox.textContent = userName || "User";
         }
 
-        // Custom Multi-select Dropdown Logic
-        const typeDisplay = document.getElementById('type-display');
-        const typeDropdown = document.getElementById('type-dropdown');
-        const selectedText = document.getElementById('selected-types-text');
-        const typeCheckboxes = document.querySelectorAll('input[name="homestay_type"]');
-
-        typeDisplay.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isOpen = typeDropdown.style.display === 'block';
-          typeDropdown.style.display = isOpen ? 'none' : 'block';
-          typeDisplay.style.borderColor = isOpen ? '#ddd' : '#2563eb';
-          typeDisplay.style.boxShadow = isOpen ? 'none' : '0 0 0 3px rgba(37, 99, 235, 0.1)';
-        });
-
-        document.addEventListener('click', () => {
-          typeDropdown.style.display = 'none';
-          typeDisplay.style.borderColor = '#ddd';
-          typeDisplay.style.boxShadow = 'none';
-        });
-
-        typeDropdown.addEventListener('click', (e) => {
-          e.stopPropagation();
-        });
-
-        const dynamicDetails = document.getElementById('dynamic-property-details');
-        const dynamicPricing = document.getElementById('dynamic-pricing');
-        const sectionsContainer = document.getElementById('sections-container');
-        const pricingContainer = document.getElementById('pricing-container');
-        const commonPricing = document.getElementById('common-pricing');
-        const descriptionTitle = document.getElementById('description-section-title');
-        const checkboxes = typeCheckboxes;
-
-        function updateSelectedTypes() {
-          const selected = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-          if (selected.length > 0) {
-            selectedText.textContent = selected.join(', ');
-            selectedText.style.color = '#374151';
-            dynamicDetails.style.display = 'block';
-            dynamicPricing.style.display = 'block';
-            descriptionTitle.style.display = 'none'; 
-            commonPricing.style.display = 'block'; // Ensure common pricing stays visible
-            // Keep common price required as a fallback or base
-            document.getElementById('price').setAttribute('required', '');
-            renderDetailSections(selected);
-            renderPricingSections(selected);
-          } else {
-            selectedText.textContent = 'Select Type';
-            selectedText.style.color = '#6b7280';
-            dynamicDetails.style.display = 'none';
-            dynamicPricing.style.display = 'none';
-            descriptionTitle.style.display = 'flex';
-            commonPricing.style.display = 'block';
-            document.getElementById('price').setAttribute('required', '');
-            sectionsContainer.innerHTML = '';
-            pricingContainer.innerHTML = '';
-          }
-        }
-
-        function renderPricingSections(selectedTypes) {
-          const existingData = {};
-          pricingContainer.querySelectorAll('.price-section').forEach(section => {
-            const type = section.dataset.type;
-            existingData[type] = {
-              price: section.querySelector(`[name="price_${type}"]`)?.value,
-              deposit: section.querySelector(`[name="deposit_${type}"]`)?.value
-            };
-          });
-
-          pricingContainer.innerHTML = '';
-          
-          selectedTypes.forEach(type => {
-            const data = existingData[type] || {};
-            const section = document.createElement('div');
-            section.className = 'price-section';
-            section.dataset.type = type;
-            section.style.marginBottom = '20px';
-            section.style.padding = '15px';
-            section.style.border = '1px solid #f0f0f0';
-            section.style.borderRadius = '8px';
-            section.style.background = '#fafafa';
-
-            section.innerHTML = `
-              <h4 style="margin-bottom: 12px; color: #16a34a; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-tag"></i> ${type} Pricing
-              </h4>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="required">Price per Night (₹)</label>
-                  <input type="number" name="price_${type}" value="${data.price || ''}" required placeholder="Price for ${type}">
-                </div>
-                <div class="form-group">
-                  <label>Security Deposit (₹)</label>
-                  <input type="number" name="deposit_${type}" value="${data.deposit || ''}" placeholder="Deposit for ${type}">
-                </div>
-              </div>
-            `;
-            pricingContainer.appendChild(section);
-          });
-        }
-
-        function renderDetailSections(selectedTypes) {
-          const existingData = {};
-          sectionsContainer.querySelectorAll('.type-section').forEach(section => {
-            const type = section.dataset.type;
-            existingData[type] = {
-              beds: section.querySelector(`[name="beds_${type}"]`)?.value,
-              baths: section.querySelector(`[name="baths_${type}"]`)?.value,
-              kitchen: section.querySelector(`[name="kitchen_${type}"]`)?.value,
-              sqFt: section.querySelector(`[name="sqFt_${type}"]`)?.value,
-              maxGuests: section.querySelector(`[name="maxGuests_${type}"]`)?.value
-            };
-          });
-
-          sectionsContainer.innerHTML = '';
-          
-          selectedTypes.forEach(type => {
-            const data = existingData[type] || {};
-            const section = document.createElement('div');
-            section.className = 'type-section';
-            section.dataset.type = type;
-            section.style.marginBottom = '25px';
-            section.style.padding = '15px';
-            section.style.border = '1px solid #f0f0f0';
-            section.style.borderRadius = '8px';
-            section.style.background = '#fafafa';
-
-            section.innerHTML = `
-              <h4 style="margin-bottom: 15px; color: #2563eb; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-door-open"></i> ${type} Details
-              </h4>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="required">Bedrooms</label>
-                  <input type="number" name="beds_${type}" value="${data.beds || ''}" required placeholder="No. of Bedrooms">
-                </div>
-                <div class="form-group">
-                  <label class="required">Bathrooms</label>
-                  <input type="number" name="baths_${type}" value="${data.baths || ''}" required placeholder="No. of Bathrooms">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="required">Kitchen Type</label>
-                  <select name="kitchen_${type}" required>
-                    <option value="" disabled ${!data.kitchen ? 'selected' : ''}>Select Kitchen</option>
-                    <option value="Attached" ${data.kitchen === 'Attached' ? 'selected' : ''}>Attached</option>
-                    <option value="Common" ${data.kitchen === 'Common' ? 'selected' : ''}>Common</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="required">Area (sq ft)</label>
-                  <input type="text" name="sqFt_${type}" value="${data.sqFt || ''}" required placeholder="e.g. 500">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="required">Maximum Guests</label>
-                  <input type="number" name="maxGuests_${type}" value="${data.maxGuests || ''}" required placeholder="No. of Guests">
-                </div>
-              </div>
-            `;
-            sectionsContainer.appendChild(section);
-          });
-        }
-
-        checkboxes.forEach(cb => {
-          cb.addEventListener('change', updateSelectedTypes);
-        });
-
         document
           .getElementById("logout-link")
           .addEventListener("click", (e) => {
@@ -982,35 +836,19 @@
           e.preventDefault();
           const formData = new FormData(form);
 
-          // Collect multiple property types
-          const selectedTypes = Array.from(
-            document.querySelectorAll("input[name='homestay_type']:checked")
-          ).map((cb) => cb.value);
-          formData.delete("type");
-          if (selectedTypes.length > 0) {
-            formData.append("type", selectedTypes.join(", "));
-          } else {
-            alert("Please select at least one property type.");
-            return;
-          }
-
           // Collect amenities
           const amenities = Array.from(
             document.querySelectorAll("input[name='amenities']:checked")
           ).map((cb) => cb.value);
           formData.delete("amenities");
           if (amenities.length > 0)
-            formData.append("amenities", amenities.join(", "));
+            formData.append("amenities", amenities.join(","));
 
           formData.set("gender", "Any");
 
           try {
-            const API_BASE = window.location.hostname.includes("localhost")
-              ? "http://localhost:4000"
-              : window.location.origin;
-
             const res = await fetch(
-              `${API_BASE}/api/properties/add-property`,
+              "http://localhost:4000/api/properties/add-property",
               {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}` },

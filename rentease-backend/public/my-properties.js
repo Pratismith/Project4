@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <div class="p-4 flex flex-col flex-1">
           <h3 class="text-lg font-semibold text-gray-800">${property.title}</h3>
           <p class="text-gray-600">${property.location}</p>
-          <p class="text-blue-600 font-bold mt-2">${property.price}</p>
+          <p class="text-blue-600 font-bold mt-2">₹${property.price}/month</p>
           <p class="text-sm text-gray-500">${property.beds} Beds • ${property.baths} Baths • ${property.sqFt} SqFt</p>
           
           <div class="flex gap-2 mt-4">

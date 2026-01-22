@@ -42,49 +42,20 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
     const {
       title, type, location, price, deposit, description,
       beds, baths, sqFt, gender, furnishing, phone, amenities,
-      availability, maxGuests, whatsapp, gmapLink, details
+      availability, maxGuests, whatsapp, gmapLink
     } = req.body;
 
-    console.log("DEBUG [Body Parsing Full]:", { 
-      title: title || "MISSING", 
-      type: type || "MISSING", 
-      location: location || "MISSING", 
-      price: price || "MISSING",
-      hasDetails: !!details 
-    });
+    console.log("DEBUG [Body Parsing]:", { title, type, location, gmapLink });
 
-    // If details exist but top-level price is missing, use the first price from details
-    let finalPrice = price;
-    if ((!finalPrice || finalPrice === "") && details) {
-      try {
-        const parsed = typeof details === 'string' ? JSON.parse(details) : details;
-        console.log("DEBUG [Price Extraction]: Parsed details keys:", Object.keys(parsed));
-        for (const type in parsed) {
-          if (parsed[type].price) {
-            finalPrice = parsed[type].price;
-            console.log(`DEBUG [Price Extraction]: Found price ${finalPrice} in type ${type}`);
-            break;
-          }
-        }
-      } catch (e) {
-        console.error("Error extracting price from details:", e.message);
-      }
-    }
-
-    if (!title || !finalPrice || finalPrice === "" || !location) {
-      console.log("DEBUG [Validation Fail]: Missing required fields", { title, finalPrice, location });
+    if (!title || !price || !location) {
+      console.log("DEBUG [Validation Fail]: Missing required fields");
       return res.status(400).json({ message: "Missing required fields: Title, Price, and Location are mandatory." });
     }
 
-    const priceNumber = finalPrice.toString().replace(/\D/g, '');
-    let formattedPrice = "";
-    
-    // If it's a homestay submission (checked via maxGuests or room types)
-    if (maxGuests || (type && type.toLowerCase().includes("bhk"))) {
-      formattedPrice = `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`;
-    } else {
-      formattedPrice = `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
-    }
+    const priceNumber = price.toString().replace(/\D/g, '');
+    let formattedPrice = (type === "Homestay" || type === "1BHK" || type === "2BHK" || type === "3BHK" || type === "Bungalow")
+      ? `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`
+      : `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
 
     const imageUrls = (req.files || []).map(f => f.path).filter(p => p);
     console.log("DEBUG [Images to Save]:", imageUrls);
@@ -92,15 +63,6 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
     let amenitiesArray = [];
     if (amenities) {
       amenitiesArray = Array.isArray(amenities) ? amenities : amenities.split(",").map(a => a.trim());
-    }
-
-    let parsedDetails = {};
-    if (details) {
-      try {
-        parsedDetails = typeof details === 'string' ? JSON.parse(details) : details;
-      } catch (e) {
-        console.error("Failed to parse nested details:", e.message);
-      }
     }
 
     const property = new Property({
@@ -123,8 +85,7 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       userId: req.user.id,
       availability: availability || "Available",
       maxGuests: parseInt(maxGuests) || 0,
-      verified: false,
-      details: parsedDetails
+      verified: false
     });
 
     console.log("DEBUG [DB Save Start]: Saving to MongoDB...");
@@ -162,14 +123,9 @@ router.put("/:id", authMiddleware, uploadToCloudinaryArray("images"), async (req
     } = req.body;
 
     const priceNumber = price.toString().replace(/\D/g, '');
-    let formattedPrice = "";
-    
-    // If it's a homestay submission (checked via maxGuests or room types)
-    if (maxGuests || type.toLowerCase().includes("bhk")) {
-      formattedPrice = `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`;
-    } else {
-      formattedPrice = `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
-    }
+    let formattedPrice = (type === "Homestay" || type === "1BHK" || type === "2BHK" || type === "3BHK" || type === "Bungalow")
+      ? `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/day`
+      : `₹${parseInt(priceNumber || 0).toLocaleString('en-IN')}/month`;
 
     const updateData = {
       title, type, location,
