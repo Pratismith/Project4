@@ -53,8 +53,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("whatsapp-btn").textContent = "💬 WhatsApp Owner";
 
       // PG Name and Other Details Box
-      document.getElementById("property-title").textContent = property.title;
-      document.getElementById("property-location").textContent = property.location;
+      const propertyTitleEl = document.getElementById("property-title");
+      const propertyLocationEl = document.getElementById("property-location");
+      const propertyDescriptionEl = document.getElementById("property-description");
+
+      if (propertyTitleEl) propertyTitleEl.textContent = property.title || "N/A";
+      if (propertyLocationEl) propertyLocationEl.textContent = property.location || "N/A";
+      if (propertyDescriptionEl) propertyDescriptionEl.textContent = property.description || "";
       
       // Google Maps Location
       const locationItem = document.querySelector(".location-info");
@@ -72,10 +77,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         locationItem.appendChild(gmapBtn);
       }
 
-      document.getElementById("bedrooms").textContent = property.beds || "-";
-      document.getElementById("bathrooms").textContent = property.baths || "-";
-      document.getElementById("area").textContent = property.sqFt || "-";
-      document.getElementById("gender").textContent = property.gender || "Any";
+      const bedroomsEl = document.getElementById("bedrooms");
+      const bathroomsEl = document.getElementById("bathrooms");
+      const areaEl = document.getElementById("area");
+      const genderEl = document.getElementById("gender");
+
+      if (bedroomsEl) bedroomsEl.textContent = property.beds || "-";
+      if (bathroomsEl) bathroomsEl.textContent = property.baths || "-";
+      if (areaEl) areaEl.textContent = property.sqFt || "-";
+      if (genderEl) genderEl.textContent = property.gender || "Any";
       document.getElementById("property-description").textContent = property.description || "";
 
       // Amenities (if available)
@@ -84,6 +94,58 @@ document.addEventListener("DOMContentLoaded", async () => {
         amenitiesContainer.innerHTML = property.amenities
           .map(a => `<div class="amenity-badge">${a}</div>`)
           .join("");
+      }
+
+      // Render Homestay Details
+      const homestaySection = document.getElementById("homestay-details-section");
+      const roomContainer = document.getElementById("room-configs-container");
+      
+      if (homestaySection && roomContainer) {
+        let hasRooms = false;
+        roomContainer.innerHTML = "";
+
+        // Check for 1BHK, 2BHK, 3BHK
+        const types = ["1BHK", "2BHK", "3BHK"];
+        types.forEach(type => {
+          const prefix = type.toLowerCase().replace("bhk", "bhk"); // bhk1, bhk2, bhk3
+          const bhkNum = type[0]; // 1, 2, 3
+          const dbPrefix = `bhk${bhkNum}`;
+          
+          if (property[`${dbPrefix}_price`]) {
+            hasRooms = true;
+            const card = document.createElement("div");
+            card.className = "room-card";
+            card.innerHTML = `
+              <h4><i class="fas fa-home"></i> ${type} Details</h4>
+              <div class="room-info-item">
+                <span class="room-info-label">Bedrooms:</span>
+                <span>${property[`${dbPrefix}_beds`] || 0}</span>
+              </div>
+              <div class="room-info-item">
+                <span class="room-info-label">Bathrooms:</span>
+                <span>${property[`${dbPrefix}_baths`] || 0}</span>
+              </div>
+              <div class="room-info-item">
+                <span class="room-info-label">Kitchen:</span>
+                <span>${property[`${dbPrefix}_kitchen`] || "N/A"}</span>
+              </div>
+              <div class="room-info-item">
+                <span class="room-info-label">Area:</span>
+                <span>${property[`${dbPrefix}_area`] || 0} sq ft</span>
+              </div>
+              <div class="room-info-item">
+                <span class="room-info-label">Max Guests:</span>
+                <span>${property[`${dbPrefix}_guests`] || 0}</span>
+              </div>
+              <div class="room-price">${property[`${dbPrefix}_price`]}</div>
+            `;
+            roomContainer.appendChild(card);
+          }
+        });
+
+        if (hasRooms) {
+          homestaySection.style.display = "block";
+        }
       }
 
       // Button Events

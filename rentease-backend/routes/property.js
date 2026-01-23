@@ -121,10 +121,33 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       amenities: amenitiesArray,
       images: imageUrls,
       userId: req.user.id,
-      availability: availability || "Available",
-      maxGuests: parseInt(maxGuests) || 0,
+      availability: req.body.availabilityStatus || "Available Now",
+      availableFrom: req.body.availableFrom || null,
+      availableTo: req.body.availableTo || null,
       verified: false,
-      details: parsedDetails
+      details: parsedDetails,
+
+      // Mapping Flattened Homestay Fields
+      bhk1_price: parsedDetails["1BHK"]?.price ? `₹${parseInt(parsedDetails["1BHK"].price.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/day` : "",
+      bhk1_beds: parseInt(parsedDetails["1BHK"]?.beds) || 0,
+      bhk1_baths: parseInt(parsedDetails["1BHK"]?.baths) || 0,
+      bhk1_kitchen: parsedDetails["1BHK"]?.kitchen || "",
+      bhk1_area: parsedDetails["1BHK"]?.sqFt || "",
+      bhk1_guests: parseInt(parsedDetails["1BHK"]?.maxGuests) || 0,
+
+      bhk2_price: parsedDetails["2BHK"]?.price ? `₹${parseInt(parsedDetails["2BHK"].price.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/day` : "",
+      bhk2_beds: parseInt(parsedDetails["2BHK"]?.beds) || 0,
+      bhk2_baths: parseInt(parsedDetails["2BHK"]?.baths) || 0,
+      bhk2_kitchen: parsedDetails["2BHK"]?.kitchen || "",
+      bhk2_area: parsedDetails["2BHK"]?.sqFt || "",
+      bhk2_guests: parseInt(parsedDetails["2BHK"]?.maxGuests) || 0,
+
+      bhk3_price: parsedDetails["3BHK"]?.price ? `₹${parseInt(parsedDetails["3BHK"].price.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/day` : "",
+      bhk3_beds: parseInt(parsedDetails["3BHK"]?.beds) || 0,
+      bhk3_baths: parseInt(parsedDetails["3BHK"]?.baths) || 0,
+      bhk3_kitchen: parsedDetails["3BHK"]?.kitchen || "",
+      bhk3_area: parsedDetails["3BHK"]?.sqFt || "",
+      bhk3_guests: parseInt(parsedDetails["3BHK"]?.maxGuests) || 0
     });
 
     console.log("DEBUG [DB Save Start]: Saving to MongoDB...");

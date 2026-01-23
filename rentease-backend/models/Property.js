@@ -13,10 +13,29 @@ const propertySchema = new mongoose.Schema(
     deposit: { type: String },
     description: { type: String },
 
-    // Property details
-    beds: { type: Number, default: 0 },
-    baths: { type: Number, default: 0 },
-    sqFt: { type: String },
+    // Flattened Homestay Details
+    bhk1_price: { type: String },
+    bhk1_beds: { type: Number, default: 0 },
+    bhk1_baths: { type: Number, default: 0 },
+    bhk1_kitchen: { type: String },
+    bhk1_area: { type: String },
+    bhk1_guests: { type: Number, default: 0 },
+
+    bhk2_price: { type: String },
+    bhk2_beds: { type: Number, default: 0 },
+    bhk2_baths: { type: Number, default: 0 },
+    bhk2_kitchen: { type: String },
+    bhk2_area: { type: String },
+    bhk2_guests: { type: Number, default: 0 },
+
+    bhk3_price: { type: String },
+    bhk3_beds: { type: Number, default: 0 },
+    bhk3_baths: { type: Number, default: 0 },
+    bhk3_kitchen: { type: String },
+    bhk3_area: { type: String },
+    bhk3_guests: { type: Number, default: 0 },
+
+    // Property details (General)
     gender: { type: String, enum: ["Male", "Female", "Any", "Family"], default: "Any" },
     furnishing: { type: String },
    // availability: { type: String, default: "Available" },
@@ -25,6 +44,12 @@ const propertySchema = new mongoose.Schema(
     phone: { type: String },
     whatsapp: { type: String },
     gmapLink: { type: String },
+
+    // Availability
+    maxGuests: { type: Number, default: 0 },
+    availability: { type: String, default: "Available Now" },
+    availableFrom: { type: Date },
+    availableTo: { type: Date },
 
     // Media and features
     amenities: [{ type: String }],
