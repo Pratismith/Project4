@@ -127,27 +127,107 @@ router.post("/add-property", authMiddleware, uploadToCloudinaryArray("images"), 
       verified: false,
       details: parsedDetails,
 
-      // Mapping Flattened Homestay Fields
-      bhk1_price: parsedDetails["1BHK"]?.price ? `₹${parseInt(parsedDetails["1BHK"].price.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/day` : "",
-      bhk1_beds: parseInt(parsedDetails["1BHK"]?.beds) || 0,
-      bhk1_baths: parseInt(parsedDetails["1BHK"]?.baths) || 0,
-      bhk1_kitchen: parsedDetails["1BHK"]?.kitchen || "",
-      bhk1_area: parsedDetails["1BHK"]?.sqFt || "",
-      bhk1_guests: parseInt(parsedDetails["1BHK"]?.maxGuests) || 0,
+      // Add PG specific fields
+      pgTypes: req.body.pgTypes,
+      totalBathrooms: parseInt(req.body.totalBathrooms) || 0,
+      
+      // Add Rent House specific fields
+      rentHouseTypes: req.body.rentHouseTypes,
+      commonKitchens: parseInt(req.body.commonKitchens) || 0,
+      
+      // Add Flat specific fields
+      flatTypes: req.body.flatTypes,
 
-      bhk2_price: parsedDetails["2BHK"]?.price ? `₹${parseInt(parsedDetails["2BHK"].price.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/day` : "",
-      bhk2_beds: parseInt(parsedDetails["2BHK"]?.beds) || 0,
-      bhk2_baths: parseInt(parsedDetails["2BHK"]?.baths) || 0,
-      bhk2_kitchen: parsedDetails["2BHK"]?.kitchen || "",
-      bhk2_area: parsedDetails["2BHK"]?.sqFt || "",
-      bhk2_guests: parseInt(parsedDetails["2BHK"]?.maxGuests) || 0,
+      // Single Bed / Room fields
+      single_price: req.body["price_Single Bed"] || req.body["price_Single Room"] ? `₹${parseInt((req.body["price_Single Bed"] || req.body["price_Single Room"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}${type === 'PG' ? '/bed' : ''}` : "",
+      single_deposit: req.body["deposit_Single Bed"] || req.body["deposit_Single Room"] ? `₹${parseInt((req.body["deposit_Single Bed"] || req.body["deposit_Single Room"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      single_beds: parseInt(req.body["beds_Single Bed"] || req.body["beds_Single Room"]) || 0,
+      single_bathType: req.body["bathType_Single Bed"] || req.body["bathType_Single Room"],
+      single_kitchenType: req.body["kitchenType_Single Room"],
 
-      bhk3_price: parsedDetails["3BHK"]?.price ? `₹${parseInt(parsedDetails["3BHK"].price.toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/day` : "",
-      bhk3_beds: parseInt(parsedDetails["3BHK"]?.beds) || 0,
-      bhk3_baths: parseInt(parsedDetails["3BHK"]?.baths) || 0,
-      bhk3_kitchen: parsedDetails["3BHK"]?.kitchen || "",
-      bhk3_area: parsedDetails["3BHK"]?.sqFt || "",
-      bhk3_guests: parseInt(parsedDetails["3BHK"]?.maxGuests) || 0
+      // Double Bed / Room fields
+      double_price: req.body["price_Double Bed"] || req.body["price_Double Room"] ? `₹${parseInt((req.body["price_Double Bed"] || req.body["price_Double Room"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}${type === 'PG' ? '/bed' : ''}` : "",
+      double_deposit: req.body["deposit_Double Bed"] || req.body["deposit_Double Room"] ? `₹${parseInt((req.body["deposit_Double Bed"] || req.body["deposit_Double Room"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      double_beds: parseInt(req.body["beds_Double Bed"] || req.body["beds_Double Room"]) || 0,
+      double_bathType: req.body["bathType_Double Bed"] || req.body["bathType_Double Room"],
+      double_kitchenType: req.body["kitchenType_Double Room"],
+
+      // Triple Bed / Room fields
+      triple_price: req.body["price_Triple Bed"] || req.body["price_Triple Room"] ? `₹${parseInt((req.body["price_Triple Bed"] || req.body["price_Triple Room"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}${type === 'PG' ? '/bed' : ''}` : "",
+      triple_deposit: req.body["deposit_Triple Bed"] || req.body["deposit_Triple Room"] ? `₹${parseInt((req.body["deposit_Triple Bed"] || req.body["deposit_Triple Room"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      triple_beds: parseInt(req.body["beds_Triple Bed"] || req.body["beds_Triple Room"]) || 0,
+      triple_bathType: req.body["bathType_Triple Bed"] || req.body["bathType_Triple Room"],
+      triple_kitchenType: req.body["kitchenType_Triple Room"],
+
+      // Mapping Flattened Homestay/RentHouse Fields
+      bhk1_price: (parsedDetails["1BHK"] || parsedDetails["1BedroomKitchen"] || req.body["price_1BHK"] || req.body["price_1BedroomKitchen"]) ? `₹${parseInt((parsedDetails["1BHK"]?.price || parsedDetails["1BedroomKitchen"]?.price || req.body["price_1BHK"] || req.body["price_1BedroomKitchen"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}${type === 'Homestay' ? '/day' : '/month'}` : "",
+      bhk1_beds: parseInt(parsedDetails["1BHK"]?.beds || parsedDetails["1BedroomKitchen"]?.beds || req.body["beds_1BHK"] || req.body["beds_1BedroomKitchen"]) || 0,
+      bhk1_baths: parseInt(parsedDetails["1BHK"]?.baths || parsedDetails["1BedroomKitchen"]?.baths || req.body["baths_1BHK"] || req.body["baths_1BedroomKitchen"]) || 0,
+      bhk1_kitchen: parsedDetails["1BHK"]?.kitchen || parsedDetails["1BedroomKitchen"]?.kitchen || req.body["kitchenType_1BHK"] || req.body["kitchenType_1BedroomKitchen"] || req.body["kitchens_1BHK"] || req.body["kitchens_1BedroomKitchen"] || "",
+      bhk1_area: parsedDetails["1BHK"]?.sqFt || parsedDetails["1BedroomKitchen"]?.sqFt || "",
+      bhk1_guests: parseInt(parsedDetails["1BHK"]?.maxGuests || parsedDetails["1BedroomKitchen"]?.maxGuests) || 0,
+      bhk1_deposit: (req.body["deposit_1BHK"] || req.body["deposit_1BedroomKitchen"]) ? `₹${parseInt((req.body["deposit_1BHK"] || req.body["deposit_1BedroomKitchen"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      bhk1_bathType: req.body["bathType_1BHK"] || req.body["bathType_1BedroomKitchen"] || "",
+
+      bhk2_price: (parsedDetails["2BHK"] || parsedDetails["2BedroomKitchen"] || req.body["price_2BHK"] || req.body["price_2BedroomKitchen"]) ? `₹${parseInt((parsedDetails["2BHK"]?.price || parsedDetails["2BedroomKitchen"]?.price || req.body["price_2BHK"] || req.body["price_2BedroomKitchen"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}${type === 'Homestay' ? '/day' : '/month'}` : "",
+      bhk2_beds: parseInt(parsedDetails["2BHK"]?.beds || parsedDetails["2BedroomKitchen"]?.beds || req.body["beds_2BHK"] || req.body["beds_2BedroomKitchen"]) || 0,
+      bhk2_baths: parseInt(parsedDetails["2BHK"]?.baths || parsedDetails["2BedroomKitchen"]?.baths || req.body["baths_2BHK"] || req.body["baths_2BedroomKitchen"]) || 0,
+      bhk2_kitchen: parsedDetails["2BHK"]?.kitchen || parsedDetails["2BedroomKitchen"]?.kitchen || req.body["kitchenType_2BHK"] || req.body["kitchenType_2BedroomKitchen"] || req.body["kitchens_2BHK"] || req.body["kitchens_2BedroomKitchen"] || "",
+      bhk2_area: parsedDetails["2BHK"]?.sqFt || parsedDetails["2BedroomKitchen"]?.sqFt || "",
+      bhk2_guests: parseInt(parsedDetails["2BHK"]?.maxGuests || parsedDetails["2BedroomKitchen"]?.maxGuests) || 0,
+      bhk2_deposit: (req.body["deposit_2BHK"] || req.body["deposit_2BedroomKitchen"]) ? `₹${parseInt((req.body["deposit_2BHK"] || req.body["deposit_2BedroomKitchen"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      bhk2_bathType: req.body["bathType_2BHK"] || req.body["bathType_2BedroomKitchen"] || "",
+
+      bhk3_price: (parsedDetails["3BHK"] || parsedDetails["3BedroomKitchen"] || req.body["price_3BHK"] || req.body["price_3BedroomKitchen"]) ? `₹${parseInt((parsedDetails["3BHK"]?.price || parsedDetails["3BedroomKitchen"]?.price || req.body["price_3BHK"] || req.body["price_3BedroomKitchen"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}${type === 'Homestay' ? '/day' : '/month'}` : "",
+      bhk3_beds: parseInt(parsedDetails["3BHK"]?.beds || parsedDetails["3BedroomKitchen"]?.beds || req.body["beds_3BHK"] || req.body["beds_3BedroomKitchen"]) || 0,
+      bhk3_baths: parseInt(parsedDetails["3BHK"]?.baths || parsedDetails["3BedroomKitchen"]?.baths || req.body["baths_3BHK"] || req.body["baths_3BedroomKitchen"]) || 0,
+      bhk3_kitchen: parsedDetails["3BHK"]?.kitchen || parsedDetails["3BedroomKitchen"]?.kitchen || req.body["kitchenType_3BHK"] || req.body["kitchenType_3BedroomKitchen"] || req.body["kitchens_3BHK"] || req.body["kitchens_3BedroomKitchen"] || "",
+      bhk3_area: parsedDetails["3BHK"]?.sqFt || parsedDetails["3BedroomKitchen"]?.sqFt || "",
+      bhk3_guests: parseInt(parsedDetails["3BHK"]?.maxGuests || parsedDetails["3BedroomKitchen"]?.maxGuests) || 0,
+      bhk3_deposit: (req.body["deposit_3BHK"] || req.body["deposit_3BedroomKitchen"]) ? `₹${parseInt((req.body["deposit_3BHK"] || req.body["deposit_3BedroomKitchen"]).toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      bhk3_bathType: req.body["bathType_3BHK"] || req.body["bathType_3BedroomKitchen"] || "",
+
+      // Flat specific rooms (from req.body instead of details for new flow)
+      flat_1rk_price: req.body["price_1RK"] ? `₹${parseInt(req.body["price_1RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/month` : "",
+      flat_1rk_deposit: req.body["deposit_1RK"] ? `₹${parseInt(req.body["deposit_1RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      flat_1rk_beds: parseInt(req.body["beds_1RK"]) || 0,
+      flat_1rk_baths: parseInt(req.body["baths_1RK"]) || 0,
+      flat_1rk_kitchens: parseInt(req.body["kitchens_1RK"]) || 0,
+
+      flat_2rk_price: req.body["price_2RK"] ? `₹${parseInt(req.body["price_2RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/month` : "",
+      flat_2rk_deposit: req.body["deposit_2RK"] ? `₹${parseInt(req.body["deposit_2RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      flat_2rk_beds: parseInt(req.body["beds_2RK"]) || 0,
+      flat_2rk_baths: parseInt(req.body["baths_2RK"]) || 0,
+      flat_2rk_kitchens: parseInt(req.body["kitchens_2RK"]) || 0,
+
+      flat_3rk_price: req.body["price_3RK"] ? `₹${parseInt(req.body["price_3RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/month` : "",
+      flat_3rk_deposit: req.body["deposit_3RK"] ? `₹${parseInt(req.body["deposit_3RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}` : "",
+      flat_3rk_beds: parseInt(req.body["beds_3RK"]) || 0,
+      flat_3rk_baths: parseInt(req.body["baths_3RK"]) || 0,
+      flat_3rk_kitchens: parseInt(req.body["kitchens_3RK"]) || 0,
+
+      // Flat specific rooms mapped for existing frontend expectations if any
+      bhk1_price: req.body["price_1RK"] ? `₹${parseInt(req.body["price_1RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/month` : "",
+      bhk1_beds: parseInt(req.body["beds_1RK"]) || 0,
+      bhk1_baths: parseInt(req.body["baths_1RK"]) || 0,
+      bhk1_kitchen: req.body["kitchens_1RK"] || "",
+
+      bhk2_price: req.body["price_2RK"] ? `₹${parseInt(req.body["price_2RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/month` : "",
+      bhk2_beds: parseInt(req.body["beds_2RK"]) || 0,
+      bhk2_baths: parseInt(req.body["baths_2RK"]) || 0,
+      bhk2_kitchen: req.body["kitchens_2RK"] || "",
+
+      bhk3_price: req.body["price_3RK"] ? `₹${parseInt(req.body["price_3RK"].toString().replace(/\D/g, '') || 0).toLocaleString('en-IN')}/month` : "",
+      bhk3_beds: parseInt(req.body["beds_3RK"]) || 0,
+      bhk3_baths: parseInt(req.body["baths_3RK"]) || 0,
+      bhk3_kitchen: req.body["kitchens_3RK"] || "",
+
+      bhk1_guests: 0,
+      bhk2_guests: 0,
+      bhk3_guests: 0,
+      bhk1_area: "",
+      bhk2_area: "",
+      bhk3_area: ""
     });
 
     console.log("DEBUG [DB Save Start]: Saving to MongoDB...");

@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           .join("");
       }
 
-      // Render Homestay Details
+      // Render Room Configurations (Homestays, PG, Rent House, Flat)
       const homestaySection = document.getElementById("homestay-details-section");
       const roomContainer = document.getElementById("room-configs-container");
       
@@ -104,39 +104,114 @@ document.addEventListener("DOMContentLoaded", async () => {
         let hasRooms = false;
         roomContainer.innerHTML = "";
 
-        // Check for 1BHK, 2BHK, 3BHK
-        const types = ["1BHK", "2BHK", "3BHK"];
-        types.forEach(type => {
-          const prefix = type.toLowerCase().replace("bhk", "bhk"); // bhk1, bhk2, bhk3
-          const bhkNum = type[0]; // 1, 2, 3
+        // 1. Homestay Types (1BHK, 2BHK, 3BHK)
+        const homestayTypes = ["1BHK", "2BHK", "3BHK"];
+        homestayTypes.forEach(type => {
+          const bhkNum = type[0];
           const dbPrefix = `bhk${bhkNum}`;
           
-          if (property[`${dbPrefix}_price`]) {
+          // Check both flattened fields and the details object (for compatibility)
+          const price = property[`${dbPrefix}_price`] || (property.details && property.details[type] && property.details[type].price);
+          
+          // CRITICAL: Skip Homestay types if the property is a "Flat" to avoid duplication with RK types
+          // Rent House can also have BHK types, so allow them for Rent House and Homestay
+          if (price && property.type !== "Flat") {
+            hasRooms = true;
+            const card = document.createElement("div");
+            card.className = "room-card";
+            
+            // Extract details from flattened fields or details object
+            const beds = property[`${dbPrefix}_beds`] || (property.details && property.details[type] && property.details[type].beds) || 0;
+            const baths = property[`${dbPrefix}_baths`] || (property.details && property.details[type] && property.details[type].baths) || 0;
+            const kitchen = property[`${dbPrefix}_kitchen`] || (property.details && property.details[type] && property.details[type].kitchen) || "N/A";
+            const area = property[`${dbPrefix}_area`] || (property.details && property.details[type] && property.details[type].sqFt) || 0;
+            const guests = property[`${dbPrefix}_guests`] || (property.details && property.details[type] && property.details[type].maxGuests) || 0;
+            const displayPrice = price.includes("₹") ? price : `₹${parseInt(price).toLocaleString('en-IN')}/day`;
+
+            card.innerHTML = `
+              <h4><i class="fas fa-home"></i> ${type} Details</h4>
+              <div class="room-info-item"><span class="room-info-label">Bedrooms:</span><span>${beds}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Bathrooms:</span><span>${baths}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Kitchen:</span><span>${kitchen}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Area:</span><span>${area} sq ft</span></div>
+              <div class="room-info-item"><span class="room-info-label">Max Guests:</span><span>${guests}</span></div>
+              <div class="room-price">${displayPrice}</div>
+            `;
+            roomContainer.appendChild(card);
+          }
+        });
+
+        // 2. PG Types (Single Bed, Double Bed, Triple Bed)
+        const pgTypes = ["Single Bed", "Double Bed", "Triple Bed"];
+        pgTypes.forEach(type => {
+          const dbPrefix = type.split(" ")[0].toLowerCase(); // single, double, triple
+          if (property[`${dbPrefix}_price`] && property.type === "PG") {
             hasRooms = true;
             const card = document.createElement("div");
             card.className = "room-card";
             card.innerHTML = `
-              <h4><i class="fas fa-home"></i> ${type} Details</h4>
-              <div class="room-info-item">
-                <span class="room-info-label">Bedrooms:</span>
-                <span>${property[`${dbPrefix}_beds`] || 0}</span>
-              </div>
-              <div class="room-info-item">
-                <span class="room-info-label">Bathrooms:</span>
-                <span>${property[`${dbPrefix}_baths`] || 0}</span>
-              </div>
-              <div class="room-info-item">
-                <span class="room-info-label">Kitchen:</span>
-                <span>${property[`${dbPrefix}_kitchen`] || "N/A"}</span>
-              </div>
-              <div class="room-info-item">
-                <span class="room-info-label">Area:</span>
-                <span>${property[`${dbPrefix}_area`] || 0} sq ft</span>
-              </div>
-              <div class="room-info-item">
-                <span class="room-info-label">Max Guests:</span>
-                <span>${property[`${dbPrefix}_guests`] || 0}</span>
-              </div>
+              <h4><i class="fas fa-bed"></i> ${type}</h4>
+              <div class="room-info-item"><span class="room-info-label">Beds:</span><span>${property[`${dbPrefix}_beds`] || 0}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Bath:</span><span>${property[`${dbPrefix}_bathType`] || "N/A"}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Deposit:</span><span>${property[`${dbPrefix}_deposit`] || "N/A"}</span></div>
+              <div class="room-price">${property[`${dbPrefix}_price`]}</div>
+            `;
+            roomContainer.appendChild(card);
+          }
+        });
+
+        // 3. Rent House Types (Single Room, Double Room, Triple Room, 1BHK, 2BHK, 3BHK)
+        const rentHouseTypes = ["Single Room", "Double Room", "Triple Room", "1BHK", "2BHK", "3BHK", "1BedroomKitchen", "2BedroomKitchen", "3BedroomKitchen"];
+        rentHouseTypes.forEach(type => {
+          // Check both bhk1_price and price_1BHK (which comes from req.body mapping)
+          let dbPrefix = type.includes("BHK") ? `bhk${type[0]}` : type.split(" ")[0].toLowerCase();
+          if (type.includes("BedroomKitchen")) {
+            dbPrefix = `bhk${type[0]}`;
+          }
+          
+          // Try to find price in multiple possible locations
+          const price = property[`${dbPrefix}_price`] || 
+                        property[`price_${type}`] || 
+                        (property.details && property.details[type] && property.details[type].price);
+          
+          if (price && property.type === "Rent House") {
+            hasRooms = true;
+            const card = document.createElement("div");
+            card.className = "room-card";
+            
+            const beds = property[`${dbPrefix}_beds`] || property[`beds_${type}`] || (property.details && property.details[type] && property.details[type].beds) || 0;
+            const depositValue = property[`${dbPrefix}_deposit`] || property[`deposit_${type}`] || (property.details && property.details[type] && property.details[type].deposit) || "N/A";
+            const bathType = property[`${dbPrefix}_bathType`] || property[`bathType_${type}`] || (property.details && property.details[type] && property.details[type].bathType) || property[`${dbPrefix}_baths`] || "N/A";
+            const kitchenType = property[`${dbPrefix}_kitchenType`] || property[`kitchenType_${type}`] || property[`${dbPrefix}_kitchen`] || (property.details && property.details[type] && property.details[type].kitchen) || "N/A";
+
+            const displayType = type.replace("BedroomKitchen", " BHK");
+
+            card.innerHTML = `
+              <h4><i class="fas fa-door-open"></i> ${displayType}</h4>
+              <div class="room-info-item"><span class="room-info-label">${type.includes("BHK") || type.includes("BedroomKitchen") ? "Bedrooms" : "Rooms"}:</span><span>${beds}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Kitchen:</span><span>${kitchenType}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Bath:</span><span>${bathType}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Deposit:</span><span>${depositValue}</span></div>
+              <div class="room-price">${price}</div>
+            `;
+            roomContainer.appendChild(card);
+          }
+        });
+
+        // 4. Flat Types (1RK, 2RK, 3RK)
+        const flatTypes = ["1RK", "2RK", "3RK"];
+        flatTypes.forEach(type => {
+          const dbPrefix = `flat_${type.toLowerCase()}`;
+          if (property[`${dbPrefix}_price`] && property.type === "Flat") {
+            hasRooms = true;
+            const card = document.createElement("div");
+            card.className = "room-card";
+            card.innerHTML = `
+              <h4><i class="fas fa-building"></i> ${type} Flat</h4>
+              <div class="room-info-item"><span class="room-info-label">Bedrooms:</span><span>${property[`${dbPrefix}_beds`] || 0}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Bathrooms:</span><span>${property[`${dbPrefix}_baths`] || 0}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Kitchens:</span><span>${property[`${dbPrefix}_kitchens`] || 0}</span></div>
+              <div class="room-info-item"><span class="room-info-label">Deposit:</span><span>${property[`${dbPrefix}_deposit`] || "N/A"}</span></div>
               <div class="room-price">${property[`${dbPrefix}_price`]}</div>
             `;
             roomContainer.appendChild(card);

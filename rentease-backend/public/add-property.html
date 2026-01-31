@@ -387,7 +387,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Property Type *</label>
-                <select name="type" required class="input">
+                <select name="type" id="propertyType" required class="input">
                   <option value="">Select Property Type</option>
                   <option>PG</option>
                   <option>Flat</option>
@@ -395,6 +395,108 @@
                   <option>Villa</option>
                 </select>
               </div>
+            </div>
+
+            <!-- PG Type Selection -->
+            <div id="pg-type-section" class="mt-6 hidden">
+              <label class="block text-sm font-medium text-gray-700 mb-2">PG Type (Multiple Select) *</label>
+              <div class="relative">
+                <button type="button" id="pg-multi-toggle" class="input flex justify-between items-center bg-white cursor-pointer">
+                  <span id="pg-multi-label" class="text-gray-500">Select Bed Types</span>
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="pg-multi-dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto p-2">
+                  <div class="space-y-1">
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="Single Bed" class="pg-option-checkbox">
+                      <span class="ml-2">Single Bed</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="Double Bed" class="pg-option-checkbox">
+                      <span class="ml-2">Double Bed</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="Triple Bed" class="pg-option-checkbox">
+                      <span class="ml-2">Triple Bed</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rent House Type Selection -->
+            <div id="rent-house-type-section" class="mt-6 hidden">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Rent House Type (Multiple Select) *</label>
+              <div class="relative">
+                <button type="button" id="rent-house-multi-toggle" class="input flex justify-between items-center bg-white cursor-pointer">
+                  <span id="rent-house-multi-label" class="text-gray-500">Select Room Types</span>
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="rent-house-multi-dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto p-2">
+                  <div class="space-y-1">
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="Single Room" class="rent-house-option-checkbox">
+                      <span class="ml-2">Single Room</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="Double Room" class="rent-house-option-checkbox">
+                      <span class="ml-2">Double Room</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="Triple Room" class="rent-house-option-checkbox">
+                      <span class="ml-2">Triple Room</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="1BHK" class="rent-house-option-checkbox">
+                      <span class="ml-2">1BHK</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="2BHK" class="rent-house-option-checkbox">
+                      <span class="ml-2">2BHK</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="3BHK" class="rent-house-option-checkbox">
+                      <span class="ml-2">3BHK</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Flat Type Selection -->
+            <div id="flat-type-section" class="mt-6 hidden">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Flat Type (Multiple Select) *</label>
+              <div class="relative">
+                <button type="button" id="flat-multi-toggle" class="input flex justify-between items-center bg-white cursor-pointer">
+                  <span id="flat-multi-label" class="text-gray-500">Select Flat Types</span>
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div id="flat-multi-dropdown" class="hidden absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto p-2">
+                  <div class="space-y-1">
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="1RK" class="flat-option-checkbox">
+                      <span class="ml-2">1RK</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="2RK" class="flat-option-checkbox">
+                      <span class="ml-2">2RK</span>
+                    </label>
+                    <label class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                      <input type="checkbox" value="3RK" class="flat-option-checkbox">
+                      <span class="ml-2">3RK</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Location/Area *</label>
                 <input type="text" name="location" placeholder="e.g., Koramangala 5th Block" required class="input">
@@ -408,6 +510,17 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">Google Maps Location Link</label>
               <input type="url" name="gmapLink" placeholder="Paste Google Maps Share Link here" class="input w-full">
             </div>
+
+            <div id="pg-bathrooms-section" class="mt-6 hidden">
+              <label class="block text-sm font-medium text-gray-700 mb-2">No of total bathrooms *</label>
+              <input type="number" name="totalBathrooms" placeholder="e.g. 4" class="input w-full">
+            </div>
+
+            <div id="rent-house-kitchen-section" class="mt-6 hidden">
+              <label class="block text-sm font-medium text-gray-700 mb-2">No of Common Kitchen *</label>
+              <input type="number" name="commonKitchens" placeholder="e.g. 1" class="input w-full">
+            </div>
+
             <div class="mt-6">
               <label class="block text-sm font-medium text-gray-700 mb-2">Full Address</label>
               <textarea name="address" placeholder="Enter complete address with landmarks..." class="input w-full" rows="3"></textarea>
@@ -415,30 +528,48 @@
           </div>
 
           <!-- Pricing & Details -->
-          <div>
+          <div id="standard-pricing-details">
             <h3 class="section-header">Pricing & Property Details</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Rent (₹) *</label>
-                <input type="number" name="price" placeholder="15000" required class="input">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Base Monthly Rent (₹) *</label>
+                <input type="number" name="price" id="standardPriceInput" placeholder="15000" class="input" required>
               </div>
-              <div>
+              <div id="standard-deposit-section">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Security Deposit (₹)</label>
                 <input type="number" name="deposit" placeholder="30000" class="input">
               </div>
-              <div>
+              <div id="standard-area-section">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Area (Sq Ft)</label>
                 <input type="number" name="sqFt" placeholder="1200" class="input">
               </div>
-              <div>
+            </div>
+
+            <!-- Dynamic Pricing Sections for PG -->
+            <div id="pg-pricing-details" class="space-y-8 mb-6 hidden">
+              <!-- Dynamic sections for Single/Double/Triple Bed will be injected here -->
+            </div>
+
+            <!-- Dynamic Pricing Sections for Rent House -->
+            <div id="rent-house-pricing-details" class="space-y-8 mb-6 hidden">
+              <!-- Dynamic sections for Single/Double/Triple Room, 1/2/3BHK will be injected here -->
+            </div>
+
+            <!-- Dynamic Pricing Sections for Flat -->
+            <div id="flat-pricing-details" class="space-y-8 mb-6 hidden">
+              <!-- Dynamic sections for 1/2/3BHK will be injected here -->
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div id="standard-beds-section">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
                 <input type="number" name="beds" placeholder="2" class="input">
               </div>
-              <div>
+              <div id="standard-baths-section">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
                 <input type="number" name="baths" placeholder="2" class="input">
               </div>
-              <div>
+              <div id="furnishing-status-section">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Furnishing Status</label>
                 <select name="furnishing" class="input">
                   <option value="">Select Furnishing</option>
@@ -494,10 +625,16 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Property Description</label>
                 <textarea name="description" placeholder="Describe your property features, nearby amenities, and why it's a great place to live..." class="input w-full" rows="4"></textarea>
               </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Contact Number *</label>
                 <input type="text" name="phone" placeholder="Enter your 10-digit mobile number" required class="input">
               </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">WhatsApp Number</label>
+                <input type="text" name="whatsapp" placeholder="Enter your WhatsApp number" class="input">
+              </div>
+            </div>
             </div>
           </div>
 

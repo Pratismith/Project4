@@ -55,6 +55,49 @@ const propertySchema = new mongoose.Schema(
     amenities: [{ type: String }],
     images: [{ type: String }],
 
+    // PG specific fields
+    pgTypes: { type: String },
+    totalBathrooms: { type: Number },
+    single_price: { type: String },
+    single_deposit: { type: String },
+    single_beds: { type: Number },
+    single_bathType: { type: String },
+    double_price: { type: String },
+    double_deposit: { type: String },
+    double_beds: { type: Number },
+    double_bathType: { type: String },
+    triple_price: { type: String },
+    triple_deposit: { type: String },
+    triple_beds: { type: Number },
+    triple_bathType: { type: String },
+
+    // Rent House specific fields
+    rentHouseTypes: { type: String },
+    commonKitchens: { type: Number },
+    single_kitchenType: { type: String },
+    double_kitchenType: { type: String },
+    triple_kitchenType: { type: String },
+
+    // Flat specific fields
+    flatTypes: { type: String },
+    flat_1rk_price: { type: String },
+    flat_1rk_deposit: { type: String },
+    flat_1rk_beds: { type: Number },
+    flat_1rk_baths: { type: Number },
+    flat_1rk_kitchens: { type: Number },
+
+    flat_2rk_price: { type: String },
+    flat_2rk_deposit: { type: String },
+    flat_2rk_beds: { type: Number },
+    flat_2rk_baths: { type: Number },
+    flat_2rk_kitchens: { type: Number },
+
+    flat_3rk_price: { type: String },
+    flat_3rk_deposit: { type: String },
+    flat_3rk_beds: { type: Number },
+    flat_3rk_baths: { type: Number },
+    flat_3rk_kitchens: { type: Number },
+
     // Metadata
     verified: { type: Boolean, default: false },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
