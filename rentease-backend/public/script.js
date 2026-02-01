@@ -291,13 +291,14 @@ function initializeFilters() {
       const selectedType = this.getAttribute("data-type");
       let filtered;
 
-      if (selectedType === "pg") filtered = allProperties.filter(p => p.type && p.type.toLowerCase().includes("pg"));
+      if (selectedType === "all") filtered = allProperties;
+      else if (selectedType === "pg") filtered = allProperties.filter(p => p.type && p.type.toLowerCase().includes("pg"));
       else if (selectedType === "apartment") filtered = allProperties.filter(p => p.type && (p.type.toLowerCase().includes("apartment") || p.type.toLowerCase().includes("rent")));
       else if (selectedType === "flat") filtered = allProperties.filter(p => p.type && p.type.toLowerCase().includes("flat"));
       else if (selectedType === "villa") filtered = allProperties.filter(p => {
         if (!p.type) return false;
         const type = p.type.toLowerCase();
-        return type.includes("1bhk") || type.includes("2bhk") || type.includes("3bhk") || type.includes("bungalow");
+        return type.includes("1bhk") || type.includes("2bhk") || type.includes("3bhk") || type.includes("bungalow") || type.includes("homestay");
       });
       else filtered = allProperties;
 
