@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Property Details | MyNest</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="property-details-new.css">
+  <script src="property-details-new.js" defer></script>
+</head>
+<body>
+  <!-- Mobile Menu Toggle -->
+  <button class="menu-toggle" id="menuToggle">☰</button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <img src="logo.png" alt="MyNest Logo" class="logo-img">
+        <div>
+          <h3 class="brand-name">MyNest</h3>
+          <p class="brand-tagline">Find Your Perfect Home</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <p class="nav-title">Navigation</p>
+        <ul>
+          <li><a href="home.html"><span class="icon">🔍</span> Search Properties</a></li>
+          <li><a href="add-property.html"><span class="icon">➕</span> Add Property</a></li>
+          <li><a href="my-properties.html"><span class="icon">📋</span> My Properties</a></li>
+          <li><a href="add-homestay.html"><span class="icon">🏡</span> Add Homestay</a></li>
+          <li><a href="signup.html" id="signup-link"><span class="icon">📝</span> Sign Up</a></li>
+          <li><a href="login.html" id="login-link"><span class="icon">🔑</span> Login</a></li>
+        </ul>
+      </nav>
+
+      <!-- Welcome Box
+      <div class="welcome" id="welcomeBox">
+        <div class="avatar" aria-hidden="true"></div>
+        <div>
+          <p class="welcome-title" id="welcome-username">Welcome</p>
+        </div>
+      </div> -->
+
+      <!-- Contact Us Section -->
+      <div class="contact" id="contact-us" aria-labelledby="contact-heading">
+        <p class="contact-title" id="contact-heading">Contact Us</p>
+        <ul class="contact-list">
+          <li>
+            <a href="https://www.instagram.com/the_my_nest?igsh=dHM1Ym41Ym1jZzI0" target="_blank" rel="noopener noreferrer">
+              <span class="contact-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17.5 6.5h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </span>
+              <span class="contact-text">@the_my_nest</span>
+            </a>
+          </li>
+          <li>
+            <a href="mailto:mynest2k23@gmail.com">
+              <span class="contact-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7.5v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7.5l-9 6-9-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="contact-text">mynest2k23@gmail.com</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://whatsapp.com/channel/0029Vafo6IoJENxzpnsgFN3P" target="_blank" rel="noopener noreferrer">
+              <span class="contact-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a9.5 9.5 0 1 1-4.1-7.6L21 3v8.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 9.3c.4-.2 1-.3 1.4-.1.4.2.8.7.9 1 .2.4.1.9.1 1.3 0 .4.2.8.6 1 .4.2 1 .3 1.6.3.6 0 1.2-.1 1.6-.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="contact-text">WhatsApp Broadcast</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Top Row: Image Gallery + Details -->
+      <div class="top-row">
+        <!-- Scrollable Image Gallery -->
+        <div class="image-box">
+          <div class="gallery-wrapper" style="position: relative;">
+            <button id="scroll-left" class="scroll-btn">◀</button>
+            <div class="scrollable-gallery" id="image-gallery">
+              <!-- Images dynamically added via JS -->
+            </div>
+            <button id="scroll-right" class="scroll-btn">▶</button>
+          </div>
+        </div>
+
+        <!-- Details Box -->
+        <div class="details-box">
+          <div class="price-section">
+            <h2 id="property-price"></h2>
+            <p id="property-deposit"></p>
+          </div>
+          <div class="status-section">
+            <span class="status-badge" id="property-furnishing"></span>
+            <span class="status-badge available" id="property-availability"></span>
+          </div>
+          <div class="contact-section">
+            <button class="contact-btn call-btn" id="call-btn"></button>
+            <button class="contact-btn whatsapp-btn" id="whatsapp-btn"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PG Details Box -->
+     <div class="pg-details-box">
+        <div class="pg-header">
+          <h1 id="property-title">Comfortable PG in Koramangala</h1>
+          <span class="verified-badge">✅ Verified</span>
+        </div>
+
+        <div class="location-info">
+          <div class="location-item">
+            <span class="icon">📍</span>
+            <p id="property-location">5th Block, Koramangala, Near Forum Mall</p>
+          </div>
+        </div>
+
+        <!-- <div class="details-grid">
+          <div class="detail-item">
+            <span class="icon">🛏</span>
+            <div>
+              <p class="detail-value" id="bedrooms">1</p>
+              <p class="detail-label">Rooms</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="icon">🛁</span>
+            <div>
+              <p class="detail-value" id="bathrooms">5</p>
+              <p class="detail-label">Bathroom</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="icon">📐</span>
+            <div>
+              <p class="detail-value" id="area">200</p>
+              <p class="detail-label">Sq Ft</p>
+            </div>
+          </div>
+          <div class="detail-item">
+            <span class="icon">👩</span>
+            <div>
+              <p class="detail-value" id="gender">Female</p>
+              <p class="detail-label">Gender</p>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- Room Configurations Section (For Homestays) -->
+        <div id="homestay-details-section" style="display: none; margin-top: 30px;">
+          <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.5em; border-bottom: 2px solid #eaf1ff; padding-bottom: 10px;">Available Room Types</h3>
+          <div id="room-configs-container" class="room-configs-grid">
+            <!-- Room cards will be added here via JS -->
+          </div>
+        </div>
+
+        <div class="description-section">
+          <h3>Description</h3>
+          <p id="property-description">
+            Well-maintained PG with all modern amenities. Located in the heart of Koramangala with easy access to IT companies and metro stations. Clean rooms, homely food, and friendly environment.
+          </p>
+        </div>
+
+        <div class="amenities-section">
+          <h3>Amenities & Features</h3>
+          <div class="amenities-grid">
+            <div class="amenity-badge"><span class="icon">📶</span> WiFi Available</div>
+            <div class="amenity-badge"><span class="icon">🚗</span> Parking Space</div>
+            <div class="amenity-badge"><span class="icon">🛡️</span> 24/7 Security</div>
+            <div class="amenity-badge"><span class="icon">🍽️</span> Food Included</div>
+            <div class="amenity-badge"><span class="icon">❄️</span> Air Conditioning</div>
+            <div class="amenity-badge"><span class="icon">🧺</span> Laundry Service</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Dynamic Navigation & Welcome Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Mobile menu functionality
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+      if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('active');
+          sidebarOverlay.classList.toggle('active');
+        });
+
+        sidebarOverlay.addEventListener('click', function() {
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        });
+      }
+
+      const token = localStorage.getItem("token");
+      const userName = localStorage.getItem("userName");
+
+      const loginLink = document.getElementById("login-link");
+      const signupLink = document.getElementById("signup-link");
+      const navList = document.querySelector(".nav ul");
+
+      if (token && userName) {
+        if (loginLink) loginLink.style.display = "none";
+        if (signupLink) signupLink.style.display = "none";
+
+        const logoutItem = document.createElement("li");
+        logoutItem.innerHTML = `<a href="#" id="logout-link" style="color: red;"><span class="icon">🚪</span> Logout</a>`;
+        navList.appendChild(logoutItem);
+
+        document.getElementById("logout-link").addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("token");
+          localStorage.removeItem("userName");
+          window.location.href = "login.html";
+        });
+
+        const welcome = document.getElementById("welcome-username");
+        if (welcome) welcome.textContent = `Welcome, ${userName}`;
+      }
+
+      // Close sidebar when clicking on nav links (mobile)
+      const navLinks = document.querySelectorAll('.nav a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+          }
+        });
+      });
+
+      // Handle window resize
+      function handleResize() {
+        if (window.innerWidth > 768) {
+          if (sidebar) sidebar.classList.remove('active');
+          if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+        }
+      }
+
+      window.addEventListener('resize', handleResize);
+      handleResize();
+
+      // Scrollable gallery buttons
+      const gallery = document.getElementById('image-gallery');
+      const scrollLeft = document.getElementById('scroll-left');
+      const scrollRight = document.getElementById('scroll-right');
+      
+      if (scrollLeft) {
+        scrollLeft.onclick = () => {
+          gallery.scrollBy({ left: -200, behavior: 'smooth' });
+        };
+      }
+      if (scrollRight) {
+        scrollRight.onclick = () => {
+          gallery.scrollBy({ left: 200, behavior: 'smooth' });
+        };
+      }
+    });
+  </script>
+</body>
+</html>
